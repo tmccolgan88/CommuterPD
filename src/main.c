@@ -23,12 +23,16 @@ typedef enum {
 
 PlaydateAPI* p = NULL;
 
+LCDBitmap* tilemap = NULL;
+LCDBitmapTable* bitmaptable = NULL;
+
 GameState gameState = Play;
 
 SpriteBase* outterbase = NULL;
 SpritePlayer* commuter = NULL;
 
 int ix = 0;
+int idx = 0;
 
 #ifdef _WINDLL
 __declspec(dllexport)
@@ -102,21 +106,32 @@ void createPlayer()
 	
 	spritePlayer->sb = base;
 	spritePlayer->health = 3;
-
+ 
 	commuter = spritePlayer;
 }
 
 void setupGame()
 {
+  const char* outerr = NULL;
   createPlayer();
+
+  tilemap = loadImageAtPath("images/tilemap1");
+  p->graphics->loadIntoBitmapTable("images/tilemap1", bitmaptable, outerr);
+  bitmaptable = p->graphics->newBitmapTable(5, 16, 16);
 }
 
 int updatePlay(void* userdata)
 {
+	
+
 	commuter->sb->spriteUpdate(commuter);
+
 	p->sprite->drawSprites();
+	//p->graphics->drawBitmap(tilemap, 0, 0, kBitmapUnflipped);
+	p->graphics->tileBitmap(tilemap, 100, 100, 32, 32, kBitmapUnflipped);
 	return 1;
 }
+
 static int update(void* userdata)
 {
 	p->graphics->clear(kColorWhite);
