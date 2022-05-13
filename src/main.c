@@ -25,8 +25,8 @@ PlaydateAPI* p = NULL;
 
 GameState gameState = Play;
 
-SpriteBase* base = NULL;
-SpritePlayer* player = NULL;
+SpriteBase* outterbase = NULL;
+SpritePlayer* commuter = NULL;
 
 int ix = 0;
 
@@ -60,31 +60,67 @@ LCDBitmap *loadImageAtPath(const char* path)
 	return img;
 }
 
-int updatePlayer(void* userdata)
+int updatePlayer(void *s)
 {
-	p->graphics->drawText("function pointer", strlen("function pointer"), kASCIIEncoding, ix++, 5);
-	return 1;
+  SpritePlayer* playerPtr = ((SpriteBase *)s);
+  PDButtons current;
+  p->system->getButtonState(&current, NULL, NULL);
+
+  if (kButtonUp & current)
+  {
+    p->sprite->moveBy(playerPtr->sb->sprite, 0, -1);
+  }
+  if (kButtonDown & current)
+  {
+	  p->sprite->moveBy(playerPtr->sb->sprite, 0, 1);
+  }
+  
+  return 1;
+}
+
+void createPlayer()
+{
+	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
+	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
+
+	LCDSprite* tempSprite = p->sprite->newSprite();
+	LCDBitmap* bmp = loadImageAtPath("images/commuter");
+
+	p->sprite->setImage(tempSprite, bmp, kBitmapUnflipped);
+	
+	int w,h;
+	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
+	PDRect cr = PDRectMake(0, 0, w, h);
+	p->sprite->setCollideRect(tempSprite, cr);
+
+	float x,y;
+	p->sprite->moveTo(tempSprite, 50, 50);
+	p->sprite->addSprite(tempSprite);
+
+	base->sprite = tempSprite;
+    base->spriteUpdate = updatePlayer;
+	
+	spritePlayer->sb = base;
+	spritePlayer->health = 3;
+
+	commuter = spritePlayer;
 }
 
 void setupGame()
 {
-  SpriteBase *playerBase = p->system->realloc(NULL, sizeof(SpriteBase));
-  playerBase->x = 50;
-  playerBase->y = 50;
-  playerBase->spriteUpdate = updatePlayer;
-
-  base = playerBase;
+  createPlayer();
 }
 
 int updatePlay(void* userdata)
 {
-	base->spriteUpdate(userdata);
+	commuter->sb->spriteUpdate(commuter);
+	p->sprite->drawSprites();
 	return 1;
 }
 static int update(void* userdata)
 {
 	p->graphics->clear(kColorWhite);
-	
+
 	if (gameState == Play)
 	  updatePlay(userdata);
 
