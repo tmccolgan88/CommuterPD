@@ -29,11 +29,12 @@ void addBaseEnemy(SpriteBase* enemy)
     if (baseListHead == NULL)
     {
         baseListHead = newNode;
-        baseListCurrent = baseListHead->next;
+        baseListCurrent = baseListHead;
     }
     else
     {
-        baseListCurrent = newNode;
+        baseListCurrent->next = newNode;
+        baseListCurrent = baseListCurrent->next;
     }
 }
 
@@ -55,7 +56,7 @@ void createBaseEnemy(LCDBitmap* bmp)
 	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
 	PDRect cr = PDRectMake(0, 0, w, h);
 	p->sprite->setCollideRect(baseSprite, cr);	
-	p->sprite->moveTo(baseSprite, 360, 50);
+	p->sprite->moveTo(baseSprite, 360, (rand() % 200) + 50);
 	p->sprite->addSprite(baseSprite);
 
 	baseEnemy->sprite = baseSprite;
