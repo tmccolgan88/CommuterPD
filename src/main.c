@@ -11,6 +11,7 @@
 
 #include "pd_api.h"
 #include "structs/spritestructs.h"
+#include "sprites/spriteengine.h"
 
 static int update(void* userdata);
 void setupGame(void);
@@ -25,8 +26,10 @@ PlaydateAPI* p = NULL;
 
 GameState gameState = Play;
 
-SpriteBase* outterbase = NULL;
 SpritePlayer* commuter = NULL;
+SpriteBase* tempBase = NULL;
+
+LCDBitmap* baseEnemyBMP;
 
 int ix = 0;
 int idx = 0;
@@ -63,7 +66,7 @@ LCDBitmap *loadImageAtPath(const char* path)
 
 int updatePlayer(void *s)
 {
-  SpritePlayer* playerPtr = ((SpriteBase *)s);
+  SpritePlayer* playerPtr = ((SpriteBase*) s);
   PDButtons current;
   p->system->getButtonState(&current, NULL, NULL);
 
@@ -78,6 +81,34 @@ int updatePlayer(void *s)
   
   return 1;
 }
+
+/*void updateBaseEnemy(void* s)
+{
+	SpriteBase* ptr = ((SpriteBase*) s);
+
+	ptr->x += ptr->dx;
+	p->sprite->moveBy(ptr->sprite, ptr->dx, 0);
+}
+
+void createBaseEnemy()
+{
+	SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
+	LCDSprite* baseSprite = p->sprite->newSprite();
+	p->sprite->setImage(baseSprite, baseEnemyBMP, kBitmapUnflipped);	
+	
+	int w,h;
+	p->graphics->getBitmapData(baseEnemyBMP, &w, &h, NULL, NULL, NULL);
+	PDRect cr = PDRectMake(0, 0, w, h);
+	p->sprite->setCollideRect(baseSprite, cr);	
+	p->sprite->moveTo(baseSprite, 360, 50);
+	p->sprite->addSprite(baseSprite);
+
+	baseEnemy->sprite = baseSprite;
+	baseEnemy->dx = -3;
+	baseEnemy->spriteUpdate = updateBaseEnemy;
+	tempBase = baseEnemy;
+
+}*/
 
 void createPlayer()
 {
@@ -94,7 +125,6 @@ void createPlayer()
 	PDRect cr = PDRectMake(0, 0, w, h);
 	p->sprite->setCollideRect(tempSprite, cr);
 
-	float x,y;
 	p->sprite->moveTo(tempSprite, 50, 50);
 	p->sprite->addSprite(tempSprite);
 
@@ -107,15 +137,23 @@ void createPlayer()
 	commuter = spritePlayer;
 }
 
+void loadAssets()
+{
+	baseEnemyBMP = loadImageAtPath("images/commuter"); //TODO base enemy sprite
+}
+
 void setupGame()
 {
-  createPlayer();
+	loadAssets();
+	setPlaydateAPISE(p);
+	createPlayer();
+	createBaseEnemy(baseEnemyBMP);
 }
 
 int updatePlay(void* userdata)
 {
 	commuter->sb->spriteUpdate(commuter);
-
+	updateSpriteLists();
 	p->sprite->drawSprites();
 	return 1;
 }
