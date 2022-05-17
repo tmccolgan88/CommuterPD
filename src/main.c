@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "pd_api.h"
+#include "tools/tools.h"
 #include "structs/spritestructs.h"
 #include "sprites/spriteengine.h"
 
@@ -29,7 +30,11 @@ GameState gameState = Play;
 SpritePlayer* commuter = NULL;
 SpriteBase* tempBase = NULL;
 
+LCDBitmap* commuterBMP;
 LCDBitmap* baseEnemyBMP;
+
+int lastTime = 0;
+int deltaTime = 0;
 
 int ix = 0;
 int idx = 0;
@@ -53,108 +58,35 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 	return 0;
 }
 
-LCDBitmap *loadImageAtPath(const char* path)
-{
-	const char* outErr = NULL;
-	LCDBitmap* img = p->graphics->loadBitmap(path, &outErr);
-	if (outErr != NULL) 
-	{
-		p->system->logToConsole("Error loading image at path '%s': %s", path, outErr);
-	}
-	return img;
-}
-
-int updatePlayer(void *s)
-{
-  SpritePlayer* playerPtr = ((SpriteBase*) s);
-  PDButtons current;
-  p->system->getButtonState(&current, NULL, NULL);
-
-  if (kButtonUp & current)
-  {
-    p->sprite->moveBy(playerPtr->sb->sprite, 0, -1);
-  }
-  if (kButtonDown & current)
-  {
-	  p->sprite->moveBy(playerPtr->sb->sprite, 0, 1);
-  }
-  
-  return 1;
-}
-
-/*void updateBaseEnemy(void* s)
-{
-	SpriteBase* ptr = ((SpriteBase*) s);
-
-	ptr->x += ptr->dx;
-	p->sprite->moveBy(ptr->sprite, ptr->dx, 0);
-}
-
-void createBaseEnemy()
-{
-	SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
-	LCDSprite* baseSprite = p->sprite->newSprite();
-	p->sprite->setImage(baseSprite, baseEnemyBMP, kBitmapUnflipped);	
-	
-	int w,h;
-	p->graphics->getBitmapData(baseEnemyBMP, &w, &h, NULL, NULL, NULL);
-	PDRect cr = PDRectMake(0, 0, w, h);
-	p->sprite->setCollideRect(baseSprite, cr);	
-	p->sprite->moveTo(baseSprite, 360, 50);
-	p->sprite->addSprite(baseSprite);
-
-	baseEnemy->sprite = baseSprite;
-	baseEnemy->dx = -3;
-	baseEnemy->spriteUpdate = updateBaseEnemy;
-	tempBase = baseEnemy;
-
-}*/
-
-void createPlayer()
-{
-	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
-	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
-
-	LCDSprite* tempSprite = p->sprite->newSprite();
-	LCDBitmap* bmp = loadImageAtPath("images/commuter");
-
-	p->sprite->setImage(tempSprite, bmp, kBitmapUnflipped);
-	
-	int w,h;
-	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
-	PDRect cr = PDRectMake(0, 0, w, h);
-	p->sprite->setCollideRect(tempSprite, cr);
-
-	p->sprite->moveTo(tempSprite, 50, 50);
-	p->sprite->addSprite(tempSprite);
-
-	base->sprite = tempSprite;
-    base->spriteUpdate = updatePlayer;
-	
-	spritePlayer->sb = base;
-	spritePlayer->health = 3;
- 
-	commuter = spritePlayer;
-}
-
 void loadAssets()
 {
-	baseEnemyBMP = loadImageAtPath("images/commuter"); //TODO base enemy sprite
+	commuterBMP = loadImageAtPath("images/commuter", p);
+	baseEnemyBMP = loadImageAtPath("images/commuter", p); //TODO base enemy sprite
 }
 
 void setupGame()
 {
 	loadAssets();
 	setPlaydateAPISE(p);
-	createPlayer();
+	createBackground();
+	createPlayer(commuterBMP);
 	createBaseEnemy(baseEnemyBMP);
+
+	deltaTime = p->system->getCurrentTimeMilliseconds() - deltaTime;
+
 }
 
 int updatePlay(void* userdata)
 {
-	commuter->sb->spriteUpdate(commuter);
+	int saveTime = p->system->getCurrentTimeMilliseconds();
+	deltaTime = saveTime - lastTime;
+	lastTime = saveTime;
+
+	p->system->logToConsole("deltaTime: %d", deltaTime);
+	updatePlayer();
 	updateSpriteLists();
 	p->sprite->drawSprites();
+
 	return 1;
 }
 
