@@ -23,6 +23,9 @@ int bgx, bgy = 0;
 LCDBitmap* commuterBMP = NULL;
 LCDBitmap* blinkBMP = NULL;
 int playerSpeed = 10;
+int speedTime = 0;
+int speedTimer = 1000;
+int canChangeSpeed = 1;
 int playerHealth = 3;
 int isDamaged = 0;
 int damageTimer = 3000;
@@ -100,7 +103,16 @@ int updateCommuter(void *s)
 	p->system->getButtonState(&current, &pushed, &released);
     crankChange = p->system->getCrankChange();
 
-    if (crankChange)
+    if (speedTime <= speedTimer)
+      speedTime += delTime;
+
+    if (speedTime > speedTimer)
+    {
+        canChangeSpeed = 1;
+        speedTime = 0;
+    }
+
+    if (crankChange && canChangeSpeed)
     {
         if (crankChange > 0)
         {
@@ -112,6 +124,7 @@ int updateCommuter(void *s)
             if (playerSpeed > 4)
                 playerSpeed -= 2;
         }
+        canChangeSpeed = 0;
     }	
 
 	if (kButtonUp & current)
