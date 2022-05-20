@@ -25,7 +25,7 @@ typedef enum {
 
 PlaydateAPI* p = NULL;
 
-GameState gameState = Play;
+static GameState gameState = Play;
 
 SpritePlayer* commuter = NULL;
 SpriteBase* tempBase = NULL;
@@ -82,9 +82,8 @@ int updatePlay(void* userdata)
 	deltaTime = saveTime - lastTime;
 	lastTime = saveTime;
 
-	p->system->logToConsole("deltaTime: %d", deltaTime);
 	updatePlayer();
-	updateSpriteLists();
+	updateSpriteLists(deltaTime);
 	p->sprite->drawSprites();
 
 	return 1;
@@ -96,6 +95,8 @@ static int update(void* userdata)
 
 	if (gameState == Play)
 	  updatePlay(userdata);
+
+	p->system->drawFPS(5, 5);
 
 	return 1;
 }

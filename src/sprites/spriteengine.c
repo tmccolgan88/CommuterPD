@@ -13,10 +13,23 @@
 //fields
 PlaydateAPI* p;
 
+int delTime = 0;
+int canJump = 1;
+int laneSize = 20;
 LCDBitmap* bgBMP = NULL;
 LCDSprite* bgSprite = NULL;
 int bgWidth, bgHeight = 0;
 int bgx, bgy = 0;
+LCDBitmap* commuterBMP = NULL;
+LCDBitmap* blinkBMP = NULL;
+int playerSpeed = 10;
+int playerHealth = 3;
+int isDamaged = 0;
+int damageTimer = 3000;
+int damageTime = 0;
+int blinkTimer = 450;
+int blinkTime = 0;
+int blinking = 0;
 SpritePlayer* player = NULL;
 BaseListNode* baseListHead = NULL;
 BaseListNode* baseListCurrent = NULL;
@@ -42,9 +55,9 @@ int isColliding(PDRect* a, PDRect* b)
 
 int updateBackground()
 {
-    bgx -= 10;
+    bgx -= playerSpeed;
 	if ( bgx < ((bgWidth) * -1)) {
-		bgx = 0;
+		bgx = bgx + bgWidth;
 	}
 
     p->sprite->markDirty(bgSprite);
@@ -67,7 +80,7 @@ void createBackground()
 	p->sprite->setUpdateFunction(bgSprite, updateBackground);
 	p->sprite->setDrawFunction(bgSprite, drawBackground);
 
-	PDRect bgBounds = PDRectMake(0, 0, 800, 300);
+	PDRect bgBounds = PDRectMake(0, 0, bgWidth, bgHeight);
 	p->sprite->setBounds(bgSprite, bgBounds);
 
 	p->sprite->setZIndex(bgSprite, 0);
@@ -79,11 +92,28 @@ void createBackground()
 int updateCommuter(void *s)
 {
 	SpritePlayer* playerPtr = ((SpriteBase*) s);
-	PDButtons current;
+	PDButtons current, pushed, released;
+    float crankChange = 0;
 	int deltaX = 0;
 	int deltaY = 0;
 
-	p->system->getButtonState(&current, NULL, NULL);	
+	p->system->getButtonState(&current, &pushed, &released);
+    crankChange = p->system->getCrankChange();
+
+    if (crankChange)
+    {
+        if (crankChange > 0)
+        {
+            if (playerSpeed < 20)
+                playerSpeed += 2;
+        }
+        else
+        {
+            if (playerSpeed > 4)
+                playerSpeed -= 2;
+        }
+    }	
+
 	if (kButtonUp & current)
 	{
 		deltaY = -3;
@@ -101,17 +131,79 @@ int updateCommuter(void *s)
 		deltaX = 3;	  
 	}
 
-	int collisionLen = 0;
-	float x, y = 0;
-	p->sprite->getPosition(playerPtr->sb->sprite, &x, &y);
-	SpriteCollisionInfo* collisions = p->sprite->moveWithCollisions(playerPtr->sb->sprite, x + deltaX, y + deltaY, NULL, NULL, &collisionLen);
+    if ((kButtonA & pushed) && canJump)
+    {
+        deltaY = -laneSize;
+        canJump = 0;
+    }
+    if ((kButtonB & pushed) && canJump)
+    {
+        deltaY = laneSize;
+        canJump = 0;
+    }
 
-    PDRect pdr = p->sprite->getBounds(playerPtr->sb->sprite);
+    if ((kButtonA & released) && !canJump)
+    {
+        canJump = 1;
+    }
+    if ((kButtonB & released) && !canJump)
+    {
+        canJump = 1;
+    } 
+
+    if  (isDamaged)
+    {
+        deltaX = -1;
+        blinkTime += delTime;
+        if (blinkTime >= blinkTimer)
+        {
+            blinkTime = 0;
+            if (blinking)
+            {
+                p->sprite->setImage(playerPtr->sb->sprite, commuterBMP, kBitmapUnflipped);
+                blinking = 0;
+            }
+            else
+            {
+                p->sprite->setImage(playerPtr->sb->sprite, blinkBMP, kBitmapUnflipped);
+                blinking = 1;
+            }
+        }
+
+        damageTime += delTime;
+        if (damageTime >= damageTimer)
+        {
+            p->sprite->setImage(playerPtr->sb->sprite, commuterBMP, kBitmapUnflipped);
+            isDamaged = 0;
+            damageTime = 0;
+        }
+    }
+
+    float x,y;
+    p->sprite->getPosition(playerPtr->sb->sprite, &x, &y);
+    p->sprite->moveBy(playerPtr->sb->sprite, deltaX, deltaY);
+
 	return 1;
+}
+
+void commuterDamage()
+{
+  playerHealth--;
+  if (playerHealth == -1)
+  {
+      ;
+    //gameOver
+    //gameState = GameOver;
+  }
+
+  //isDamaged = 1;
+
 }
 
 void createPlayer(LCDBitmap* bmp)
 {
+    commuterBMP = bmp;
+    blinkBMP = loadImageAtPath("images/blink", p);
 	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
 	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
 
@@ -188,12 +280,15 @@ int updatePlayer()
     return 1;
 }
 
-void updateSpriteLists()
+void updateSpriteLists(int deltaTime)
 {
+    delTime = deltaTime;
+
     PDRect tempRect;
     PDRect playerRect = p->sprite->getBounds(player->sb->sprite);
     BaseListNode* baseListNode = baseListHead;
-
+    
+    updatePlayer();
     updateBackground();
 
     if (baseListNode != NULL)
@@ -206,6 +301,13 @@ void updateSpriteLists()
             if (isColliding(&playerRect, &tempRect))
             {
                 p->sprite->removeSprite(baseListNode->enemy->sprite);
+                
+                if (!isDamaged)
+                {
+                    p->sprite->setImage(player->sb->sprite, blinkBMP, kBitmapUnflipped);
+                    blinking = 1;
+                    isDamaged = 1;
+                }
             }
             baseListNode = baseListNode->next;
         }

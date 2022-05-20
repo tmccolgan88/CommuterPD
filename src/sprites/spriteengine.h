@@ -5,11 +5,11 @@ int updateBackground(void);
 void drawBackground(void);
 void createBackground(void);
 int updateCommuter(void*);
-int updatePlayer(void);
 void createPlayer(LCDBitmap*);
+int updatePlayer(void);
+void updateSpriteLists(int deltaTime);
 void addBaseEnemy(SpriteBase* enemy);
 void createBaseEnemy(LCDBitmap* bmp);
-void updateSpriteLists(void);
 
 //structs
 typedef struct BaseListNode {
