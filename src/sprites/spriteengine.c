@@ -22,6 +22,8 @@ int bgWidth, bgHeight = 0;
 int bgx, bgy = 0;
 LCDBitmap* commuterBMP = NULL;
 LCDBitmap* blinkBMP = NULL;
+int commuterWidth, commuterHeight = 0;
+int commWidthOffset, commHeightOffset = 0;
 int playerSpeed = 10;
 int speedTime = 0;
 int speedTimer = 1000;
@@ -112,6 +114,7 @@ int updateCommuter(void *s)
         speedTime = 0;
     }
 
+    //change speed logic
     if (crankChange && canChangeSpeed)
     {
         if (crankChange > 0)
@@ -127,6 +130,7 @@ int updateCommuter(void *s)
         canChangeSpeed = 0;
     }	
 
+    //linear movement logic
 	if (kButtonUp & current)
 	{
 		deltaY = -3;
@@ -144,6 +148,7 @@ int updateCommuter(void *s)
 		deltaX = 3;	  
 	}
 
+    //lane warping logic
     if ((kButtonA & pushed) && canJump)
     {
         deltaY = -laneSize;
@@ -164,9 +169,11 @@ int updateCommuter(void *s)
         canJump = 1;
     } 
 
+    //damage state logic
     if  (isDamaged)
     {
         deltaX = -1;
+        deltaY = 0;
         blinkTime += delTime;
         if (blinkTime >= blinkTimer)
         {
@@ -192,12 +199,26 @@ int updateCommuter(void *s)
         }
     }
 
+    //make sure the player is in the screen bounds
     float x,y;
     p->sprite->getPosition(playerPtr->sb->sprite, &x, &y);
-    p->sprite->moveBy(playerPtr->sb->sprite, deltaX, deltaY);
+
+    x += (float) deltaX;
+    y += (float) deltaY;
+
+    if (x < commWidthOffset)
+        x = commWidthOffset;
+    if (x > 400 - commWidthOffset)
+        x = 400 - commWidthOffset;
+    if (y < commuterHeight)
+        y = commuterHeight;
+    if (y > 240 - commuterHeight)
+        y = 240 - commuterHeight;
+
+    p->sprite->moveTo(playerPtr->sb->sprite, x, y);
 
 	return 1;
-}
+} //updatePlayer
 
 void commuterDamage()
 {
@@ -224,9 +245,11 @@ void createPlayer(LCDBitmap* bmp)
 
 	p->sprite->setImage(tempSprite, bmp, kBitmapUnflipped);
 	
-	int w,h;
-	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
-	PDRect cr = PDRectMake(0, 0, w, h);
+	p->graphics->getBitmapData(bmp, &commuterWidth, &commuterHeight, NULL, NULL, NULL);
+    commWidthOffset = commuterWidth / 2;
+    commuterHeight = commuterHeight / 2;
+
+	PDRect cr = PDRectMake(0, 0, commuterWidth, commuterHeight);
 	p->sprite->setCollideRect(tempSprite, cr);
 
 	p->sprite->moveTo(tempSprite, 50, 50);
@@ -318,6 +341,7 @@ void updateSpriteLists(int deltaTime)
                 if (!isDamaged)
                 {
                     p->sprite->setImage(player->sb->sprite, blinkBMP, kBitmapUnflipped);
+                    playerSpeed = 10;
                     blinking = 1;
                     isDamaged = 1;
                 }
