@@ -36,6 +36,9 @@ LCDBitmap* baseEnemyBMP;
 int lastTime = 0;
 int deltaTime = 0;
 
+int addEnemyTime = 0;
+int addEnemyTimer = 3500;
+
 int ix = 0;
 int idx = 0;
 
@@ -82,6 +85,12 @@ int updatePlay(void* userdata)
 	deltaTime = saveTime - lastTime;
 	lastTime = saveTime;
 
+	addEnemyTime += deltaTime;
+	if (addEnemyTime > addEnemyTimer)
+	{
+		addEnemyTime = 0;
+		createBaseEnemy(baseEnemyBMP);
+	}
 	updatePlayer();
 	updateSpriteLists(deltaTime);
 	p->sprite->drawSprites();
