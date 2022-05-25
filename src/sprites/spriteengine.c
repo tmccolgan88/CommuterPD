@@ -6,12 +6,10 @@
 */
 
 #include "pd_api.h"
+#include "../globals.h"
 #include "../structs/spritestructs.h"
 #include "spriteengine.h"
 #include "../tools/tools.h"
-
-//fields
-PlaydateAPI* p;
 
 int delTime = 0;
 int canJump = 1;
@@ -40,10 +38,6 @@ BaseListNode* baseListHead = NULL;
 BaseListNode* baseListCurrent = NULL;
 
 //functions
-void setPlaydateAPISE(PlaydateAPI* pd)
-{
-    p = pd;
-}
 
 int isColliding(PDRect* a, PDRect* b)
 {
@@ -92,6 +86,14 @@ void createBackground()
 
 	p->sprite->addSprite(bgSprite);
     
+}
+
+int getDistanceTraveled()
+{
+    if (player == NULL)
+      return -1;
+
+    return player->distanceTraveledSP;
 }
 
 int updateCommuter(void *s)
@@ -216,6 +218,7 @@ int updateCommuter(void *s)
         y = 240 - commuterHeight;
 
     p->sprite->moveTo(playerPtr->sb->sprite, x, y);
+    distanceTraveled += playerSpeed;
 
 	return 1;
 } //updatePlayer
@@ -259,6 +262,7 @@ void createPlayer(LCDBitmap* bmp)
     base->spriteUpdate = updateCommuter;
 	
 	spritePlayer->sb = base;
+    spritePlayer->distanceTraveledSP = 0;
 	spritePlayer->health = 3;
  
 	player = spritePlayer;

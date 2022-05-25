@@ -10,9 +10,11 @@
 #include <stdlib.h>
 
 #include "pd_api.h"
+#include "globals.h"
 #include "tools/tools.h"
 #include "structs/spritestructs.h"
 #include "sprites/spriteengine.h"
+#include "levels/levelengine.h"
 
 static int update(void* userdata);
 void setupGame(void);
@@ -23,7 +25,7 @@ typedef enum {
   GameOver
 } GameState;
 
-PlaydateAPI* p = NULL;
+//PlaydateAPI* p = NULL;
 
 static GameState gameState = Play;
 
@@ -69,13 +71,24 @@ void loadAssets()
 
 void setupGame()
 {
+	char line[20];
 	loadAssets();
-	setPlaydateAPISE(p);
+	//setPlaydateAPISE(p);
+	//setPlaydateAPILE(p);
+	loadLevel(1);
 	createBackground();
 	createPlayer(commuterBMP);
 	createBaseEnemy(baseEnemyBMP);
 
+	distanceTraveled = 0;
 	deltaTime = p->system->getCurrentTimeMilliseconds() - deltaTime;
+
+	SDFile* file = p->file->open("level1.txt", kFileReadData);
+    //p->system->logToConsole("file error : %s", p->file->geterr());
+    p->file->read(file, line, 20);
+    //p->system->logToConsole("file error : %s", p->file->geterr());
+    p->system->logToConsole("main : %s", line);
+    p->file->close(file);
 
 }
 
@@ -95,6 +108,7 @@ int updatePlay(void* userdata)
 	updateSpriteLists(deltaTime);
 	p->sprite->drawSprites();
 
+	//p->system->logToConsole("%d", distanceTraveled);
 	return 1;
 }
 
