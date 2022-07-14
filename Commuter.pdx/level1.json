@@ -1,0 +1,71 @@
+
+{ 
+    "level1" : {
+        "distance" : 1400000,
+        "enemyIndex" : 0,
+        "numEnemies" : 10,
+        "LevelEnemyData" : [
+            {
+                "launchDistance" : 400,
+                "launchX" : 400,
+                "launchY" : 150,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 4000,
+                "launchX" : 400,
+                "launchY" : 200,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 6000,
+                "launchX" : 400,
+                "launchY" : 100,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 4000,
+                "launchX" : 400,
+                "launchY" : 120,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 12000,
+                "launchX" : 400,
+                "launchY" : 160,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 14000,
+                "launchX" : 400,
+                "launchY" : 150,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 14000,
+                "launchX" : 400,
+                "launchY" : 200,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 17400,
+                "launchX" : 400,
+                "launchY" : 100,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 20000,
+                "launchX" : 400,
+                "launchY" : 120,
+                "type" : "base"
+            },
+            {
+                "launchDistance" : 22000,
+                "launchX" : 400,
+                "launchY" : 160,
+                "type" : "base"
+            }
+        ]
+    }
+
+} 

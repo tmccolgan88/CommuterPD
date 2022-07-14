@@ -31,9 +31,17 @@ set(PLAYDATE_GAME_DEVICE Commuter_DEVICE)
 project(${PLAYDATE_GAME_NAME} C ASM)
 
 if (TOOLCHAIN STREQUAL "armgcc")
-	add_executable(${PLAYDATE_GAME_DEVICE} ${SDK}/C_API/buildsupport/setup.c src/main.c)
+	add_executable(${PLAYDATE_GAME_DEVICE} ${SDK}/C_API/buildsupport/setup.c 
+	src/main.c 
+	src/sprites/spriteengine.c
+	src/tools/tools.c
+	src/levels/levelengine.c)
 else()
-	add_library(${PLAYDATE_GAME_NAME} SHARED src/main.c)
+	add_library(${PLAYDATE_GAME_NAME} SHARED 
+	src/main.c 
+	src/sprites/spriteengine.c
+	src/tools/tools.c
+	src/levels/levelengine.c)
 endif()
 
 include(${SDK}/C_API/buildsupport/playdate_game.cmake)
