@@ -73,7 +73,7 @@ void createBackground()
 {
     bgSprite = p->sprite->newSprite();
 
-	bgBMP = loadImageAtPath("images/tempbackground1", p);
+	bgBMP = loadImageAtPath("images/tempbackground1");
 	p->graphics->getBitmapData(bgBMP, &bgWidth, &bgHeight, NULL, NULL, NULL);
 
 	p->sprite->setUpdateFunction(bgSprite, updateBackground);
@@ -240,7 +240,7 @@ void commuterDamage()
 void createPlayer(LCDBitmap* bmp)
 {
     commuterBMP = bmp;
-    blinkBMP = loadImageAtPath("images/blink", p);
+    blinkBMP = loadImageAtPath("images/blink");
 	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
 	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
 
@@ -304,7 +304,7 @@ void createBaseEnemy(LCDBitmap* bmp)
 	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
 	PDRect cr = PDRectMake(0, 0, w, h);
 	p->sprite->setCollideRect(baseSprite, cr);	
-	p->sprite->moveTo(baseSprite, 360, (rand() % 200) + 50);
+	p->sprite->moveTo(baseSprite, 410, (rand() % 200) + 50);
 	p->sprite->addSprite(baseSprite);
 
 	baseEnemy->sprite = baseSprite;

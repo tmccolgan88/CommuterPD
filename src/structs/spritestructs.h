@@ -6,7 +6,8 @@
 
 typedef enum {
   Player,
-  Enemy
+  Enemy,
+  Base
 } SpriteTypes;
 
 typedef enum {
