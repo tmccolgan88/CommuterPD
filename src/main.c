@@ -65,8 +65,8 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 
 void loadAssets()
 {
-	commuterBMP = loadImageAtPath("images/commuter", p);
-	baseEnemyBMP = loadImageAtPath("images/commuter", p); //TODO base enemy sprite
+	commuterBMP = loadImageAtPath("images/commuter");
+	baseEnemyBMP = loadImageAtPath("images/commuter"); //TODO base enemy sprite
 }
 
 void setupGame()
@@ -78,17 +78,9 @@ void setupGame()
 	loadLevel(1);
 	createBackground();
 	createPlayer(commuterBMP);
-	createBaseEnemy(baseEnemyBMP);
 
 	distanceTraveled = 0;
 	deltaTime = p->system->getCurrentTimeMilliseconds() - deltaTime;
-
-	SDFile* file = p->file->open("level1.txt", kFileReadData);
-    //p->system->logToConsole("file error : %s", p->file->geterr());
-    p->file->read(file, line, 20);
-    //p->system->logToConsole("file error : %s", p->file->geterr());
-    p->system->logToConsole("main : %s", line);
-    p->file->close(file);
 
 }
 
@@ -98,12 +90,7 @@ int updatePlay(void* userdata)
 	deltaTime = saveTime - lastTime;
 	lastTime = saveTime;
 
-	addEnemyTime += deltaTime;
-	if (addEnemyTime > addEnemyTimer)
-	{
-		addEnemyTime = 0;
-		createBaseEnemy(baseEnemyBMP);
-	}
+	updateLevel();
 	updatePlayer();
 	updateSpriteLists(deltaTime);
 	p->sprite->drawSprites();
