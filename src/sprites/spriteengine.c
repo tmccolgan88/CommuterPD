@@ -96,6 +96,11 @@ int getDistanceTraveled()
     return player->distanceTraveledSP;
 }
 
+void setLaneWidth(int width)
+{
+    laneSize = width;
+}
+
 int updateCommuter(void *s)
 {
 	SpritePlayer* playerPtr = ((SpriteBase*) s);
@@ -305,6 +310,26 @@ void createBaseEnemy(LCDBitmap* bmp)
 	PDRect cr = PDRectMake(0, 0, w, h);
 	p->sprite->setCollideRect(baseSprite, cr);	
 	p->sprite->moveTo(baseSprite, 410, (rand() % 200) + 50);
+	p->sprite->addSprite(baseSprite);
+
+	baseEnemy->sprite = baseSprite;
+	baseEnemy->dx = -3;
+	baseEnemy->spriteUpdate = updateBaseEnemy;
+    
+    addBaseEnemy(baseEnemy);
+}
+
+void createBaseEnemyWithY(LCDBitmap* bmp, int y)
+{
+    SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
+	LCDSprite* baseSprite = p->sprite->newSprite();
+	p->sprite->setImage(baseSprite, bmp, kBitmapUnflipped);	
+	
+	int w,h;
+	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
+	PDRect cr = PDRectMake(0, 0, w, h);
+	p->sprite->setCollideRect(baseSprite, cr);	
+	p->sprite->moveTo(baseSprite, 410, y);
 	p->sprite->addSprite(baseSprite);
 
 	baseEnemy->sprite = baseSprite;

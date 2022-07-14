@@ -68,6 +68,10 @@ void didDecodeTableValue(json_decoder* decoder, const char* key, json_value valu
     {
         level->numEnemies = json_intValue(value);
     }
+    if (strcmp(key, "laneWidth") == 0)
+    {
+        setLaneWidth(json_intValue(value));
+    }
 
     //level enemey data
     if (strcmp(key, "launchDistance") == 0)
@@ -142,7 +146,7 @@ int updateLevel()
     if (level->enemeyIndex < level->numEnemies)
         if (distanceTraveled > level->enemies[level->enemeyIndex].launchDistance)
         {
-            createBaseEnemy(bmp);
+            createBaseEnemyWithY(bmp, level->enemies[level->enemeyIndex].launchY);
             level->enemeyIndex++;
         }
 }
