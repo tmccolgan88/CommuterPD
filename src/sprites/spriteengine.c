@@ -5,21 +5,24 @@
   Purpose : Logic to create/update level enemies. 
 */
 
-#include "pd_api.h"
-#include "../globals.h"
 #include "../structs/spritestructs.h"
 #include "spriteengine.h"
 #include "../tools/tools.h"
+#include "../particles/particles.h"
+#include "../globals.h"
 
 int delTime = 0;
 int canJump = 1;
 int laneSize = 20;
+int topOfRoad = 0;
+int bottomOfRoad = 0;
 LCDBitmap* bgBMP = NULL;
 LCDSprite* bgSprite = NULL;
 int bgWidth, bgHeight = 0;
 int bgx, bgy = 0;
 LCDBitmap* commuterBMP = NULL;
 LCDBitmap* blinkBMP = NULL;
+LCDBitmap* teleportParticleBMP = NULL;
 int commuterWidth, commuterHeight = 0;
 int commWidthOffset, commHeightOffset = 0;
 int playerSpeed = 10;
@@ -101,6 +104,16 @@ void setLaneWidth(int width)
     laneSize = width;
 }
 
+void setTopOfRoad(int top)
+{
+    topOfRoad = top;
+}
+
+void setBottomOfRoad(int bottom)
+{
+    bottomOfRoad = bottom; 
+}
+
 int updateCommuter(void *s)
 {
 	SpritePlayer* playerPtr = ((SpriteBase*) s);
@@ -147,7 +160,7 @@ int updateCommuter(void *s)
 		deltaY = 3;	  
 	}
 	if (kButtonLeft & current)
-	{
+	{ 
 		deltaX = -3;
 	}
 	if (kButtonRight & current)
@@ -159,26 +172,33 @@ int updateCommuter(void *s)
     if ((kButtonA & pushed) && canJump)
     {
         deltaY = -laneSize;
+        addTeleportParticleBurst(teleportParticleBMP, playerPtr->sb->x, playerPtr->sb->y);
+        p->sprite->setImage(playerPtr->sb->sprite, blinkBMP, kBitmapUnflipped);
         canJump = 0;
     }
     if ((kButtonB & pushed) && canJump)
     {
         deltaY = laneSize;
+        addTeleportParticleBurst(teleportParticleBMP, playerPtr->sb->x, playerPtr->sb->y);
+        p->sprite->setImage(playerPtr->sb->sprite, blinkBMP, kBitmapUnflipped);
         canJump = 0;
     }
 
     if ((kButtonA & released) && !canJump)
     {
         canJump = 1;
+        p->sprite->setImage(playerPtr->sb->sprite, commuterBMP, kBitmapUnflipped);
     }
     if ((kButtonB & released) && !canJump)
     {
         canJump = 1;
+        p->sprite->setImage(playerPtr->sb->sprite, commuterBMP, kBitmapUnflipped);
     } 
 
     //damage state logic
     if  (isDamaged)
     {
+        canJump = 0;
         deltaX = -1;
         deltaY = 0;
         blinkTime += delTime;
@@ -201,6 +221,7 @@ int updateCommuter(void *s)
         if (damageTime >= damageTimer)
         {
             p->sprite->setImage(playerPtr->sb->sprite, commuterBMP, kBitmapUnflipped);
+            canJump = 1;
             isDamaged = 0;
             damageTime = 0;
         }
@@ -217,12 +238,14 @@ int updateCommuter(void *s)
         x = commWidthOffset;
     if (x > 400 - commWidthOffset)
         x = 400 - commWidthOffset;
-    if (y < commuterHeight)
-        y = commuterHeight;
-    if (y > 240 - commuterHeight)
-        y = 240 - commuterHeight;
+    if (y < topOfRoad)
+        y = topOfRoad;
+    if (y > bottomOfRoad - commuterHeight)
+        y = bottomOfRoad - commuterHeight;
 
     p->sprite->moveTo(playerPtr->sb->sprite, x, y);
+    playerPtr->sb->x = x;
+    playerPtr->sb->y = y;
     distanceTraveled += playerSpeed;
 
 	return 1;
@@ -246,6 +269,7 @@ void createPlayer(LCDBitmap* bmp)
 {
     commuterBMP = bmp;
     blinkBMP = loadImageAtPath("images/blink");
+    teleportParticleBMP = loadImageAtPath("images/teleport_particle");
 	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
 	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
 
@@ -355,6 +379,7 @@ void updateSpriteLists(int deltaTime)
     
     updatePlayer();
     updateBackground();
+    updateParticles(deltaTime);
 
     if (baseListNode != NULL)
     {

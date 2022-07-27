@@ -1,3 +1,5 @@
+#include "pd_api.h"
+
 //prototypes
 void setPlaydateAPISE(PlaydateAPI* pd);
 int isColliding(PDRect*, PDRect*);
@@ -5,6 +7,8 @@ int updateBackground(void);
 void drawBackground(void);
 void createBackground(void);
 void setLaneWidth(int width);
+void setTopOfRoad(int top);
+void setBottomOfRoad(int bottom);
 int updateCommuter(void*);
 void createPlayer(LCDBitmap*);
 int updatePlayer(void);
@@ -16,5 +20,5 @@ void createBaseEnemyWithY(LCDBitmap* bmp, int y);
 //structs
 typedef struct BaseListNode {
     SpriteBase* enemy;
-    struct BaseListNode* next;
+    struct BaseListNode* next; 
 } BaseListNode;

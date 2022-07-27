@@ -4,15 +4,15 @@
   Author : Tim McColgan
   Date : 04/27/2022
 
-  Purpose : Provde a set of structs and functions to create/update/draw particles
+  Purpose : Provde a set of structs and functions to create/upate/draw particles
 
   A group of particles (burst), is stored as a linked list of individual particles.  Those lists are children
   to a ParticleBurst linked list.
 */
 
+#include "pd_api.h"
 #include "particles.h"
-
-PlaydateAPI *pd;
+#include "../globals.h"
 
 typedef struct Particle
 {
@@ -40,11 +40,15 @@ typedef struct ParticleBurstNode
 ParticleBurstNode *particleBurstHead = NULL;
 ParticleBurstNode *particleBurstCurrent = NULL;
 
-void setPD(PlaydateAPI *playdate)
-{
-  pd = playdate;
-}
-
+/*
+* adds a burst of particles that disperse at random angles and speeds
+*
+* @param *particleBMP - the bitmap of the particle image
+* @param x - the x location of the center of the burst
+* @param y - the y loaction of the center of the burst
+*
+* return - void
+*/
 void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 {
 	ParticleListNode *headParticle = NULL;
@@ -55,7 +59,7 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 
 	for (i = 0; i < numParticles; i++)
 	{
-		Particle* particle = pd->system->realloc(NULL, sizeof(Particle));
+		Particle* particle = p->system->realloc(NULL, sizeof(Particle));
 		particle->bmp = particleBMP;
 		particle->x = x;
 		particle->y = y;
@@ -65,7 +69,7 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 		particle->deltaTime = 0;
 
 		ParticleListNode* node;
-		node = pd->system->realloc(NULL, sizeof(ParticleListNode));
+		node = p->system->realloc(NULL, sizeof(ParticleListNode));
 		node->p = particle;
 		node->next = NULL; 
 
@@ -83,7 +87,64 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 		}
 	}
 
-    ParticleBurstNode* burstNode = pd->system->realloc(NULL, sizeof(ParticleBurstNode));
+    ParticleBurstNode* burstNode = p->system->realloc(NULL, sizeof(ParticleBurstNode));
+    burstNode->burstHead = headParticle;
+    burstNode->next = NULL;
+
+    if (particleBurstHead == NULL)
+    {
+        particleBurstHead = burstNode;
+        particleBurstHead->next = NULL;
+
+        particleBurstCurrent = particleBurstHead;
+    }
+    else
+    {
+        particleBurstCurrent->next = burstNode;
+        particleBurstCurrent = particleBurstCurrent->next;
+        particleBurstCurrent->next = NULL;
+    }
+}
+
+void addTeleportParticleBurst(LCDBitmap *particleBMP, int x, int y) 
+{
+    ParticleListNode *headParticle = NULL;
+    ParticleListNode *currentParticle = NULL;
+
+	int i = 0;
+	int numParticles = 22; //(rand() % 14) + 6;
+
+	for (i = 0; i < numParticles; i++)
+	{
+		Particle* particle = p->system->realloc(NULL, sizeof(Particle));
+		particle->bmp = particleBMP;
+		particle->x = x + (rand() % 20) - 10;
+		particle->y = y + (rand() % 20) - 10;
+		particle->dx = (rand() % 4) - 1;
+		particle->dy = 0; //(rand() % 6) - 3;
+		particle->timer = 200;
+		particle->deltaTime = 0;
+
+		ParticleListNode* node;
+		node = p->system->realloc(NULL, sizeof(ParticleListNode));
+		node->p = particle;
+		node->next = NULL; 
+
+		if (headParticle == NULL)
+		{
+			headParticle = node;
+            headParticle->next = NULL;
+
+			currentParticle = headParticle;
+		}
+		else
+		{
+			currentParticle->next = node;
+			currentParticle = currentParticle->next;
+		}
+	}
+
+    ParticleBurstNode* burstNode = p->system->realloc(NULL, sizeof(ParticleBurstNode));
     burstNode->burstHead = headParticle;
     burstNode->next = NULL;
 
@@ -139,14 +200,14 @@ void removeAllParticles()
 	    {
             savedNode = particleNode->next;
 
-		    pd->system->realloc(particleNode, sizeof(ParticleBurstNode));
+		    p->system->realloc(particleNode, sizeof(ParticleBurstNode));
 		
 		    particleNode = savedNode;
 	    }
 
         burstSaveNode = headBurstNode;
         headBurstNode = headBurstNode->next;
-        pd->system->realloc(burstSaveNode, sizeof(ParticleBurstNode));
+        p->system->realloc(burstSaveNode, sizeof(ParticleBurstNode));
 
     }
     particleBurstHead = NULL;
@@ -164,7 +225,7 @@ int drawParticles()
 	    while (particleNode != NULL)
 	    {
 		    if (particleNode->p->deltaTime < particleNode->p->timer)
-			    pd->graphics->drawBitmap(particleNode->p->bmp, particleNode->p->x, particleNode->p->y, kBitmapUnflipped);
+			    p->graphics->drawBitmap(particleNode->p->bmp, particleNode->p->x, particleNode->p->y, kBitmapUnflipped);
 		
 		    particleNode = particleNode->next;
 	    }

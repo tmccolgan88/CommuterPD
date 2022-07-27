@@ -72,6 +72,14 @@ void didDecodeTableValue(json_decoder* decoder, const char* key, json_value valu
     {
         setLaneWidth(json_intValue(value));
     }
+    if (strcmp(key, "roadTop") == 0)
+    {
+        setTopOfRoad(json_intValue(value));
+    }
+    if (strcmp(key, "roadBottom") == 0)
+    {
+        setBottomOfRoad(json_intValue(value));
+    }
 
     //level enemey data
     if (strcmp(key, "launchDistance") == 0)
