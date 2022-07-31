@@ -7,13 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pd_api.h"
 #include "../globals.h"
 #include "../tools/tools.h"
 #include "../structs/spritestructs.h"
 #include "../sprites/spriteengine.h"
+#include "../sprites/commuter.h"
 
-//PlaydateAPI* ple = NULL;
 LevelData* level = NULL;
 int currentEnemeyIndex = 0;
 
@@ -99,6 +98,8 @@ void didDecodeTableValue(json_decoder* decoder, const char* key, json_value valu
         EnemyTypes tempType;
         if (strcmp(json_stringValue(value), "base") == 0)
             tempType = Coupe;
+        else
+          tempType = Coupe;
 
         //this is the last field in the enemy object, so increment the index
         level->enemies[currentEnemeyIndex++].type = tempType;
@@ -143,8 +144,6 @@ int loadLevel(int levelNum)
 	json_value val;
 	p->json->decode(&decoder, (json_reader){ .read = p->file->read, .userdata = file }, &val);
     p->file->close(file);
-
-
 
     return 1;
 }

@@ -6,6 +6,5 @@
 
 #include "pd_api.h"
 
-void setPlaydateAPILE(PlaydateAPI* pd);
 int loadLevel(int levelNum);
-int updateLevel();
+int updateLevel(void);
