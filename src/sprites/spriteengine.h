@@ -1,7 +1,7 @@
 #include "pd_api.h"
 
 //prototypes
-void setPlaydateAPISE(PlaydateAPI* pd);
+void _spriteEngineInitialize(void);
 int isColliding(PDRect*, PDRect*);
 int updateBackground(void);
 void drawBackground(void);
@@ -9,8 +9,7 @@ void createBackground(void);
 void setLaneWidth(int width);
 void setTopOfRoad(int top);
 void setBottomOfRoad(int bottom);
-int updateCommuter(void*);
-void createPlayer(LCDBitmap*);
+void createCommuter(void);
 int updatePlayer(void);
 void updateSpriteLists(int deltaTime);
 void addBaseEnemy(SpriteBase* enemy);
