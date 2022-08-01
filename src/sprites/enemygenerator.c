@@ -18,9 +18,10 @@ LCDBitmap** bmpseg;
 
 int loadBitmapsEG()
 {
-  bmpseg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 2);
+  bmpseg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
   bmpseg[0] = loadImageAtPath("images/commuter");
   bmpseg[1] = loadImageAtPath("images/bigrig");
+  bmpseg[2] = loadImageAtPath("images/debris_particle1");
  }
 
 /*
@@ -33,9 +34,10 @@ void _enemyGeneratorInitialize()
   loadBitmapsEG();
 }
 
-void destroyBaseEnemy()
+void destroyBaseEnemy(int x, int y)
 {
-
+    p->system->logToConsole("x and y : %i %i", x , y);
+    addParticleBurst(bmpseg[2], x, y);
 }
 
 void updateBaseEnemy(void* s)
@@ -44,6 +46,7 @@ void updateBaseEnemy(void* s)
 
 	ptr->x += ptr->dx;
 	p->sprite->moveBy(ptr->sprite, ptr->dx, 0);
+    
 }
 
 SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
@@ -60,6 +63,8 @@ SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
 	p->sprite->addSprite(baseSprite);
 
 	baseEnemy->sprite = baseSprite;
+    baseEnemy->x = 410;
+    baseEnemy->y = y;
 	baseEnemy->dx = -3;
 	baseEnemy->spriteUpdate = updateBaseEnemy;
     p->sprite->setUpdateFunction(baseSprite, updateBaseEnemy);

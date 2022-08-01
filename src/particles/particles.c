@@ -1,13 +1,13 @@
 /*
-  Particle Framework
-
-  Author : Tim McColgan
-  Date : 04/27/2022
-
-  Purpose : Provde a set of structs and functions to create/upate/draw particles
-
-  A group of particles (burst), is stored as a linked list of individual particles.  Those lists are children
-  to a ParticleBurst linked list.
+*  Particle Framework
+*
+*  Author : Tim McColgan
+*  Date : 04/27/2022
+*
+*  Purpose : Provide a set of structs and functions to create/upate/draw particles
+*
+*  A group of particles (burst), is stored as a linked list of individual particles.  Those lists are children
+*  to a ParticleBurst linked list.
 */
 
 #include "pd_api.h"
@@ -43,9 +43,9 @@ ParticleBurstNode *particleBurstCurrent = NULL;
 /*
 * adds a burst of particles that disperse at random angles and speeds
 *
-* @param *particleBMP - the bitmap of the particle image
-* @param x - the x location of the center of the burst
-* @param y - the y loaction of the center of the burst
+* @param LCDBitmap *particleBMP - the bitmap of the particle image
+* @param int x - the x location of the center of the burst
+* @param int y - the y loaction of the center of the burst
 *
 * return - void
 */
@@ -53,9 +53,9 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 {
 	ParticleListNode *headParticle = NULL;
     ParticleListNode *currentParticle = NULL;
-
+    p->system->logToConsole("creating particle burst");
 	int i = 0;
-	int numParticles = (rand() % 14) + 6;
+	int numParticles = 4;
 
 	for (i = 0; i < numParticles; i++)
 	{

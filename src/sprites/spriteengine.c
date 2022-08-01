@@ -39,9 +39,9 @@ int isColliding(PDRect* a, PDRect* b)
 }
 
 /*
-  Initialize the sprite engine.
-
-  @return - void
+*  Initialize the sprite engine.
+*
+*  @return - void
 */
 void _spriteEngineInitialize()
 {
@@ -85,11 +85,11 @@ void createBackground()
 }
 
 /*
-  Function file  - commuter.c
-
-  Create the player character.
-
-  @return - void
+*  Function file  - commuter.c
+*
+*  Create the player character.
+*
+*  @return - void
 */
 void createCommuter()
 {
@@ -97,11 +97,11 @@ void createCommuter()
 }
 
 /*
-  Make a call to the enemy generator to create a sprite and
-    add it to the sprite list
-
-  @param enum enemyType - Type of enemy to add
-  @param int y - The y to launch the enemy
+* Make a call to the enemy generator to create a sprite and
+*   add it to the sprite list
+*
+* @param enum enemyType - Type of enemy to add
+* @param int y - The y to launch the enemy
 */
 void addBaseEnemy(EnemyTypes enemyType, int y)
 {
@@ -122,10 +122,10 @@ void addBaseEnemy(EnemyTypes enemyType, int y)
 }
 
 /*
-  Update all the sprites in the current scene. Delete sprites where neccessary
-
-  @param deltaTime - time passed since last draw
-  @return - void
+*  Update all the sprites in the current scene. Delete sprites where neccessary
+*
+*  @param deltaTime - time passed since last draw
+*  @return - void
 */
 void updateSpriteLists(int deltaTime)
 {
@@ -152,6 +152,7 @@ void updateSpriteLists(int deltaTime)
                 //custom sprite list
                 setDamaged(1);
                 //TODO - actually delete the sprite rather than moving it out of the way
+                destroyBaseEnemy(baseListNode->enemy->x, baseListNode->enemy->y);
                 baseListNode->enemy->x = -50;
                 baseListNode->enemy->y = -50;
                 p->sprite->moveTo(baseListNode->enemy->sprite, baseListNode->enemy->x, baseListNode->enemy->y);

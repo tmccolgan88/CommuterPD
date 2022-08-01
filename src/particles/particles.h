@@ -1,4 +1,3 @@
-void setPD(PlaydateAPI *pd);
 void addParticleBurst(LCDBitmap *particleBMP, int x, int y);
 void addTeleportParticleBurst(LCDBitmap *particleBMP, int x, int y);
 void updateParticles(int deltaTime);

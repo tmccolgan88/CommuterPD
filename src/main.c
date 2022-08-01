@@ -69,6 +69,7 @@ void setupGame()
 {
 	_spriteEngineInitialize();
 	_enemyGeneratorInitialize();
+	removeAllParticles();
 	loadLevel(1);
  
 	distanceTraveled = 0;
