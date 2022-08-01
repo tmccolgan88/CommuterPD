@@ -8,6 +8,7 @@
 #include "../structs/spritestructs.h"
 #include "spriteengine.h"
 #include "commuter.h"
+#include "enemygenerator.h"
 #include "../tools/tools.h"
 #include "../particles/particles.h"
 #include "../globals.h"
@@ -18,8 +19,6 @@ LCDSprite* bgSprite = NULL;
 int bgWidth, bgHeight = 0;
 int bgx, bgy = 0;
 LCDBitmap* commuterBMP = NULL;
-LCDBitmap* blinkBMP = NULL;
-LCDBitmap* teleportParticleBMP = NULL;
 SpritePlayer* player = NULL;
 BaseListNode* baseListHead = NULL;
 BaseListNode* baseListCurrent = NULL;
@@ -39,9 +38,16 @@ int isColliding(PDRect* a, PDRect* b)
     return 1;
 }
 
+/*
+  Initialize the sprite engine.
+
+  @return - void
+*/
 void _spriteEngineInitialize()
 {
     createCommuter();
+    _enemyGeneratorInitialize();
+
     bgBMP = loadImageAtPath("images/tempbackground1");
     createBackground();
 }
@@ -74,11 +80,8 @@ void createBackground()
 
 	PDRect bgBounds = PDRectMake(0, 0, bgWidth, bgHeight);
 	p->sprite->setBounds(bgSprite, bgBounds);
-
 	p->sprite->setZIndex(bgSprite, 0);
-
 	p->sprite->addSprite(bgSprite);
-    
 }
 
 /*
@@ -93,10 +96,17 @@ void createCommuter()
     createPlayer();
 }
 
-void addBaseEnemy(SpriteBase* enemy)
+/*
+  Make a call to the enemy generator to create a sprite and
+    add it to the sprite list
+
+  @param enum enemyType - Type of enemy to add
+  @param int y - The y to launch the enemy
+*/
+void addBaseEnemy(EnemyTypes enemyType, int y)
 {
     BaseListNode* newNode = p->system->realloc(NULL, sizeof(BaseListNode));
-    newNode->enemy = enemy;
+    newNode->enemy = createBaseEnemy(Coupe, y);
     newNode->next = NULL;
 
     if (baseListHead == NULL)
@@ -109,54 +119,6 @@ void addBaseEnemy(SpriteBase* enemy)
         baseListCurrent->next = newNode;
         baseListCurrent = baseListCurrent->next;
     }
-}
-
-void updateBaseEnemy(void* s)
-{
-	SpriteBase* ptr = ((SpriteBase*) s);
-
-	ptr->x += ptr->dx;
-	p->sprite->moveBy(ptr->sprite, ptr->dx, 0);
-}
-
-void createBaseEnemy(LCDBitmap* bmp)
-{
-    SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
-	LCDSprite* baseSprite = p->sprite->newSprite();
-	p->sprite->setImage(baseSprite, bmp, kBitmapUnflipped);	
-	
-	int w,h;
-	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
-	PDRect cr = PDRectMake(0, 0, w, h);
-	p->sprite->setCollideRect(baseSprite, cr);	
-	p->sprite->moveTo(baseSprite, 410, (rand() % 200) + 50);
-	p->sprite->addSprite(baseSprite);
-
-	baseEnemy->sprite = baseSprite;
-	baseEnemy->dx = -3;
-	baseEnemy->spriteUpdate = updateBaseEnemy;
-    p->sprite->setUpdateFunction(baseSprite, updateBaseEnemy);
-    addBaseEnemy(baseEnemy);
-}
-
-void createBaseEnemyWithY(LCDBitmap* bmp, int y)
-{
-    SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
-	LCDSprite* baseSprite = p->sprite->newSprite();
-	p->sprite->setImage(baseSprite, bmp, kBitmapUnflipped);	
-	
-	int w,h;
-	p->graphics->getBitmapData(bmp, &w, &h, NULL, NULL, NULL);
-	PDRect cr = PDRectMake(0, 0, w, h);
-	p->sprite->setCollideRect(baseSprite, cr);	
-	p->sprite->moveTo(baseSprite, 410, y);
-	p->sprite->addSprite(baseSprite);
-
-	baseEnemy->sprite = baseSprite;
-	baseEnemy->dx = -3;
-	baseEnemy->spriteUpdate = updateBaseEnemy;
-    
-    addBaseEnemy(baseEnemy);
 }
 
 /*

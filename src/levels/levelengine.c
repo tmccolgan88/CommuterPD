@@ -16,7 +16,8 @@
 LevelData* level = NULL;
 int currentEnemeyIndex = 0;
 
-LCDBitmap* bmp = NULL;
+LCDBitmap* coupe = NULL;
+LCDBitmap* bigrig = NULL;
 
 void decodeError(json_decoder* decoder, const char* error, int linenum)
 {
@@ -136,7 +137,8 @@ json_decoder decoder =
 
 int loadLevel(int levelNum)
 {
-    bmp = loadImageAtPath("images/commuter");
+    coupe = loadImageAtPath("images/commuter");
+    bigrig = loadImageAtPath("images/bigrig");
     level = p->system->realloc(NULL, sizeof(LevelData));
     
     SDFile* file = p->file->open("level1.json", kFileRead);
@@ -153,7 +155,8 @@ int updateLevel()
     if (level->enemeyIndex < level->numEnemies)
         if (distanceTraveled > level->enemies[level->enemeyIndex].launchDistance)
         {
-            createBaseEnemyWithY(bmp, level->enemies[level->enemeyIndex].launchY);
+            //createBaseEnemyWithY(coupe, level->enemies[level->enemeyIndex].launchY);
+            addBaseEnemy(Coupe, level->enemies[level->enemeyIndex].launchY);
             level->enemeyIndex++;
         }
 }

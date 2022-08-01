@@ -12,9 +12,9 @@
 #include "../particles/particles.h"
 
 //internal prototypes
-int loadBitmaps(void);
+int loadBitmapsC(void);
 
-LCDBitmap** bmps;
+LCDBitmap** bmpsc;
 SpritePlayer* player;
 
 //meta fields
@@ -47,12 +47,12 @@ int bottomOfRoad = 0;
   @param - void
   @return - int (status code)
 */
-int loadBitmaps()
+int loadBitmapsC()
 {
-  bmps = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
-  bmps[0] = loadImageAtPath("images/commuter");
-  bmps[1] = loadImageAtPath("images/blink");
-  bmps[2] = loadImageAtPath("images/teleport_particle");
+  bmpsc = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
+  bmpsc[0] = loadImageAtPath("images/commuter");
+  bmpsc[1] = loadImageAtPath("images/blink");
+  bmpsc[2] = loadImageAtPath("images/teleport_particle");
 } //loadBitmaps
 
 
@@ -105,7 +105,7 @@ void setDamaged (int _isDamaged)
     {
         isDamaged = _isDamaged;
         blinking = 1;
-        p->sprite->setImage(player->sb->sprite, bmps[1], kBitmapUnflipped);
+        p->sprite->setImage(player->sb->sprite, bmpsc[1], kBitmapUnflipped);
     }
 } //setDamaged
 
@@ -178,27 +178,27 @@ int updateCommuter(int delTime)
     if ((kButtonA & pushed) && canJump)
     {
         deltaY = -laneSize;
-        addTeleportParticleBurst(bmps[2], playerPtr->sb->x, playerPtr->sb->y);
-        p->sprite->setImage(playerPtr->sb->sprite, bmps[1], kBitmapUnflipped);
+        addTeleportParticleBurst(bmpsc[2], playerPtr->sb->x, playerPtr->sb->y);
+        p->sprite->setImage(playerPtr->sb->sprite, bmpsc[1], kBitmapUnflipped);
         canJump = 0;
     }
     if ((kButtonB & pushed) && canJump)
     {
         deltaY = laneSize;
-        addTeleportParticleBurst(bmps[2], playerPtr->sb->x, playerPtr->sb->y);
-        p->sprite->setImage(playerPtr->sb->sprite, bmps[1], kBitmapUnflipped);
+        addTeleportParticleBurst(bmpsc[2], playerPtr->sb->x, playerPtr->sb->y);
+        p->sprite->setImage(playerPtr->sb->sprite, bmpsc[1], kBitmapUnflipped);
         canJump = 0;
     }
 
     if ((kButtonA & released) && !canJump)
     {
         canJump = 1;
-        p->sprite->setImage(playerPtr->sb->sprite, bmps[0], kBitmapUnflipped);
+        p->sprite->setImage(playerPtr->sb->sprite, bmpsc[0], kBitmapUnflipped);
     }
     if ((kButtonB & released) && !canJump)
     {
         canJump = 1;
-        p->sprite->setImage(playerPtr->sb->sprite, bmps[0], kBitmapUnflipped);
+        p->sprite->setImage(playerPtr->sb->sprite, bmpsc[0], kBitmapUnflipped);
     } 
 
     //damage state logic
@@ -213,12 +213,12 @@ int updateCommuter(int delTime)
             blinkTime = 0;
             if (blinking)
             {
-                p->sprite->setImage(playerPtr->sb->sprite, bmps[0], kBitmapUnflipped);
+                p->sprite->setImage(playerPtr->sb->sprite, bmpsc[0], kBitmapUnflipped);
                 blinking = 0;
             } 
             else
             {
-                p->sprite->setImage(playerPtr->sb->sprite, bmps[1], kBitmapUnflipped);
+                p->sprite->setImage(playerPtr->sb->sprite, bmpsc[1], kBitmapUnflipped);
                 blinking = 1;
             }
         }
@@ -226,7 +226,7 @@ int updateCommuter(int delTime)
         damageTime += delTime;
         if (damageTime >= damageTimer)
         {
-            p->sprite->setImage(playerPtr->sb->sprite, bmps[0], kBitmapUnflipped);
+            p->sprite->setImage(playerPtr->sb->sprite, bmpsc[0], kBitmapUnflipped);
             canJump = 1;
             isDamaged = 0;
             damageTime = 0;
@@ -279,16 +279,16 @@ void commuterDamage()
 */
 void createPlayer()
 {   
-    loadBitmaps();
+    loadBitmapsC();
 
 	SpriteBase* base = p->system->realloc(NULL, sizeof(SpriteBase));
 	SpritePlayer* spritePlayer = p->system->realloc(NULL, sizeof(SpritePlayer));
 
 	LCDSprite* playerSprite = p->sprite->newSprite();
 
-	p->sprite->setImage(playerSprite, bmps[0], kBitmapUnflipped);
+	p->sprite->setImage(playerSprite, bmpsc[0], kBitmapUnflipped);
 	
-	p->graphics->getBitmapData(bmps[0], &commuterWidth, &commuterHeight, NULL, NULL, NULL);
+	p->graphics->getBitmapData(bmpsc[0], &commuterWidth, &commuterHeight, NULL, NULL, NULL);
     commWidthOffset = commuterWidth / 2;
     commuterHeight = commuterHeight / 2;
 

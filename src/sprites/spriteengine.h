@@ -12,9 +12,10 @@ void setBottomOfRoad(int bottom);
 void createCommuter(void);
 int updatePlayer(void);
 void updateSpriteLists(int deltaTime);
-void addBaseEnemy(SpriteBase* enemy);
-void createBaseEnemy(LCDBitmap* bmp);
+void addBaseEnemy(EnemyTypes enemyType, int y);
+//void createBaseEnemy(LCDBitmap* bmp);
 void createBaseEnemyWithY(LCDBitmap* bmp, int y);
+void createBigRigWithY(LCDBitmap* bmp, int y);
 
 //structs
 typedef struct BaseListNode {

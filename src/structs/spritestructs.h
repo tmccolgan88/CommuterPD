@@ -15,7 +15,8 @@ typedef enum {
     Sedan,
     Van,
     Bus,
-    Truck
+    Truck,
+    BigRig
 } EnemyTypes;
 
 typedef struct SpriteBase {
