@@ -61,29 +61,32 @@ int loadBitmapsC()
 ////////////////////////////
 
 /*
-  Return the collision rect of the player
-
-  @return PDRect* - a pointer to the collision rect 
+*  Return the collision rect of the player
+*
+*  @return PDRect* - a pointer to the collision rect 
 */
 PDRect getCommuterRect()
 {
   return p->sprite->getBounds(player->sb->sprite);
 } //getPDRect()
 
+/*
+*  Return the distance traveled / 100
+*
+*  @return int - disctance traveled / 100 (score)
+*/
 int getDistanceTraveled()
 {
     if (player == NULL)
       return -1;
 
     return player->distanceTraveledSP / 100;
-}
+} //getDistanceTraveled
 
 /*
 *  Return the current player speed
 *
-*  @param - void
-*
-*  @return - int
+*  @return - int the players speed
 */
 int getSpeed()
 {

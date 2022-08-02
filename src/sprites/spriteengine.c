@@ -65,8 +65,8 @@ int updateBackground()
 
 void drawBackground()
 {
-	p->graphics->drawBitmap(bgBMP, bgx, -30, 0);
-    p->graphics->drawBitmap(bgBMP, bgx + bgWidth, -30, 0);
+	p->graphics->drawBitmap(bgBMP, bgx, -40, 0);
+    p->graphics->drawBitmap(bgBMP, bgx + bgWidth, -40, 0);
 }
 
 void createBackground()
