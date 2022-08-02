@@ -16,6 +16,7 @@
 #include "sprites/spriteengine.h"
 #include "sprites/commuter.h"
 #include "sprites/enemygenerator.h"
+#include "ui/ui.h"
 #include "levels/levelengine.h"
 #include "particles/particles.h"
 
@@ -91,6 +92,7 @@ int updatePlay(void* userdata)
 	updateSpriteLists(deltaTime);
 	p->sprite->drawSprites();
     drawParticles();
+	drawHUD();
 	return 1;
 } //updatePlay
 

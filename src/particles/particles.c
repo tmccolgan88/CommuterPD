@@ -55,7 +55,7 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
     ParticleListNode *currentParticle = NULL;
     p->system->logToConsole("creating particle burst");
 	int i = 0;
-	int numParticles = 4;
+	int numParticles = 6;
 
 	for (i = 0; i < numParticles; i++)
 	{
@@ -63,8 +63,8 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 		particle->bmp = particleBMP;
 		particle->x = x;
 		particle->y = y;
-		particle->dx = (rand() % 10) - 5;
-		particle->dy = (rand() % 10) - 5;
+		particle->dx = (rand() % 20) - 10;
+		particle->dy = (rand() % 20) - 10;
 		particle->timer = 200;
 		particle->deltaTime = 0;
 

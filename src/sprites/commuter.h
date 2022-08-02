@@ -3,6 +3,8 @@ void setLaneWidth(int);
 void setTopOfRoad(int);
 void setBottomOfRoad(int);
 void setDamaged(int);
+int getDistanceTraveled(void);
+int getSpeed(void);
 void createPlayer(void);
 void commuterDamage(void);
 int updateCommuter(int delTime);

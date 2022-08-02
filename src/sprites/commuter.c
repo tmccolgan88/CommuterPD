@@ -75,7 +75,22 @@ int getDistanceTraveled()
     if (player == NULL)
       return -1;
 
-    return player->distanceTraveledSP;
+    return player->distanceTraveledSP / 100;
+}
+
+/*
+*  Return the current player speed
+*
+*  @param - void
+*
+*  @return - int
+*/
+int getSpeed()
+{
+    if (player == NULL)
+        return -1;
+
+    return playerSpeed;
 }
 
 /*
@@ -252,8 +267,9 @@ int updateCommuter(int delTime)
     p->sprite->moveTo(playerPtr->sb->sprite, x, y);
     playerPtr->sb->x = x;
     playerPtr->sb->y = y;
+    playerPtr->distanceTraveledSP += playerSpeed;
     distanceTraveled += playerSpeed;
-
+   
 	return 1;
 } //updatePlayer
 
@@ -272,10 +288,10 @@ void commuterDamage()
 }
 
 /*
-  Create the player character, initialize all related sprite data
-
-  @param - void
-  @return - void
+*  Create the player character, initialize all related sprite data
+*
+*  @param - void
+*  @return - void
 */
 void createPlayer()
 {   
