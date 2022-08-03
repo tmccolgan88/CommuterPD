@@ -22,6 +22,11 @@ BaseListNode* baseListCurrent = NULL;
 
 //functions
 
+/*
+*  Logic to see if 2 PDRects are colliding
+*
+* @return int - 0 if false 1 if true
+*/
 int isColliding(PDRect* a, PDRect* b)
 {
     if (a->x > (b->x + b->width) ||
