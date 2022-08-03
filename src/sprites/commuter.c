@@ -97,10 +97,10 @@ int getSpeed()
 }
 
 /*
-  Set the size of the lane provided by the level json
-
-  @param _laneSize - the width of the lane
-  @return - void
+*  Set the size of the lane provided by the level json
+*
+*  @param _laneSize - the width of the lane
+*  @return - void
 */
 void setLaneWidth(int _laneSize)
 {

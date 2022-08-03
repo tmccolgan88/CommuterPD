@@ -14,6 +14,7 @@
 #include "tools/tools.h"
 #include "structs/spritestructs.h"
 #include "sprites/spriteengine.h"
+#include "sprites/backgroundgenerator.h"
 #include "sprites/commuter.h"
 #include "sprites/enemygenerator.h"
 #include "ui/ui.h"
@@ -69,7 +70,6 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 void setupGame()
 {
 	_spriteEngineInitialize();
-	_enemyGeneratorInitialize();
 	removeAllParticles();
 	loadLevel(1);
  

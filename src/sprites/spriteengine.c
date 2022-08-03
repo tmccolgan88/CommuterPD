@@ -7,6 +7,7 @@
 
 #include "../structs/spritestructs.h"
 #include "spriteengine.h"
+#include "backgroundgenerator.h"
 #include "commuter.h"
 #include "enemygenerator.h"
 #include "../tools/tools.h"
@@ -14,10 +15,6 @@
 #include "../globals.h"
 
 int delTime = 0;
-LCDBitmap* bgBMP = NULL;
-LCDSprite* bgSprite = NULL;
-int bgWidth, bgHeight = 0;
-int bgx, bgy = 0;
 LCDBitmap* commuterBMP = NULL;
 SpritePlayer* player = NULL;
 BaseListNode* baseListHead = NULL;
@@ -45,14 +42,13 @@ int isColliding(PDRect* a, PDRect* b)
 */
 void _spriteEngineInitialize()
 {
-    createCommuter();
-    _enemyGeneratorInitialize();
-
-    bgBMP = loadImageAtPath("images/tempbackground1");
+    _backgroundGeneratorInitialize();
+	_enemyGeneratorInitialize();
     createBackground();
+    createCommuter();
 }
 
-int updateBackground()
+/*int updateBackground()
 {
     bgx -= 10; //need to reflect player speed
 	if ( bgx < ((bgWidth) * -1)) {
@@ -82,7 +78,7 @@ void createBackground()
 	p->sprite->setBounds(bgSprite, bgBounds);
 	p->sprite->setZIndex(bgSprite, 0);
 	p->sprite->addSprite(bgSprite);
-}
+}*/
 
 /*
 *  Function file  - commuter.c
