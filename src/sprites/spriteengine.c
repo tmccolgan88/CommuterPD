@@ -75,7 +75,7 @@ void createCommuter()
 void addBaseEnemy(EnemyTypes enemyType, int y)
 {
     BaseListNode* newNode = p->system->realloc(NULL, sizeof(BaseListNode));
-    newNode->enemy = createBaseEnemy(Coupe, y);
+    newNode->enemy = createBaseEnemy(BigRig, y);
     newNode->next = NULL;
 
     if (baseListHead == NULL)
