@@ -53,7 +53,6 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 {
 	ParticleListNode *headParticle = NULL;
     ParticleListNode *currentParticle = NULL;
-    p->system->logToConsole("creating particle burst");
 	int i = 0;
 	int numParticles = 6;
 

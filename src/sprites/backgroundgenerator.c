@@ -59,8 +59,8 @@ int updateBackground()
 */
 void drawBackground()
 {
-	p->graphics->drawBitmap(bmpsbg[0], bgx, -40, 0);
-    p->graphics->drawBitmap(bmpsbg[0], bgx + bgWidth, -40, 0);
+	p->graphics->drawBitmap(bmpsbg[0], bgx, -30, 0);
+    p->graphics->drawBitmap(bmpsbg[0], bgx + bgWidth, -30, 0);
 }
 
 /*
@@ -84,4 +84,6 @@ void createBackground()
 	p->sprite->setBounds(bgSprite, bgBounds);
 	p->sprite->setZIndex(bgSprite, 0);
 	p->sprite->addSprite(bgSprite);
+
+    p->system->logToConsole("bgwidth : %i", bgWidth);
 }
