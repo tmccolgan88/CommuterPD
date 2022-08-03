@@ -42,10 +42,10 @@ int topOfRoad = 0;
 int bottomOfRoad = 0;
 
 /*
-  Load the bitmaps used by the commuter
-
-  @param - void
-  @return - int (status code)
+*  Load the bitmaps used by the commuter
+*
+*  @param - void
+*  @return - int (status code)
 */
 int loadBitmapsC()
 {

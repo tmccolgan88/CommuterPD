@@ -14,17 +14,33 @@ LCDBitmap** bmpsbg;
 LCDSprite* bgSprite = NULL;
 int bgWidth, bgHeight, bgx = 0;
 
+/*
+*  Initialize the background generator.
+*
+*  @return - void
+*/
 void _backgroundGeneratorInitialize()
 {
   loadBitmapsBG();
 }
 
+/*
+*  Load the bitmaps used by the background generator
+*
+*  @param - void
+*  @return - void
+*/
 void loadBitmapsBG()
 {
     bmpsbg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 1);
     bmpsbg[0] = loadImageAtPath("images/tempbackground1");
 }
 
+/*
+*  update logic
+*
+* @return int - status code
+*/
 int updateBackground()
 {
     bgx -= 10; //need to reflect player speed
@@ -36,12 +52,25 @@ int updateBackground()
     return 1;
 }
 
+/*
+*  Draw logic
+*
+*  @return - void
+*/
 void drawBackground()
 {
 	p->graphics->drawBitmap(bmpsbg[0], bgx, -40, 0);
     p->graphics->drawBitmap(bmpsbg[0], bgx + bgWidth, -40, 0);
 }
 
+/*
+*  Create the background, initialize all related sprite data
+*
+*  @param - void
+*  @return - void
+*
+*  TODO - this will need to be made dynamic to change roads mid level?
+*/
 void createBackground()
 {
     bgSprite = p->sprite->newSprite();
