@@ -1,5 +1,8 @@
 /*
-    levelengine.c
+    levels/levelengine.c
+
+    Reads the level file and creates a level object out of it
+
     Author : Tim McColgan
 */
 
@@ -97,8 +100,10 @@ void didDecodeTableValue(json_decoder* decoder, const char* key, json_value valu
     if (strcmp(key, "type") == 0)
     {
         EnemyTypes tempType;
-        if (strcmp(json_stringValue(value), "base") == 0)
+        if (strcmp(json_stringValue(value), "Coupe") == 0)
             tempType = Coupe;
+        else if (strcmp(json_stringValue(value), "BigRig") == 0)
+            tempType = BigRig;
         else
           tempType = Coupe;
 
@@ -137,8 +142,6 @@ json_decoder decoder =
 
 int loadLevel(int levelNum)
 {
-    coupe = loadImageAtPath("images/commuter");
-    bigrig = loadImageAtPath("images/bigrig");
     level = p->system->realloc(NULL, sizeof(LevelData));
     
     SDFile* file = p->file->open("level1.json", kFileRead);
@@ -155,8 +158,7 @@ int updateLevel()
     if (level->enemeyIndex < level->numEnemies)
         if (distanceTraveled > level->enemies[level->enemeyIndex].launchDistance)
         {
-            //createBaseEnemyWithY(coupe, level->enemies[level->enemeyIndex].launchY);
-            addBaseEnemy(Coupe, level->enemies[level->enemeyIndex].launchY);
+            addBaseEnemy(level->enemies[level->enemeyIndex].type, level->enemies[level->enemeyIndex].launchY);
             level->enemeyIndex++;
         }
 }

@@ -2,6 +2,8 @@
   sprites/enemygenerator.c
 
   Creates the level enemies and update functions
+
+  Author : Tim McColgan
 */
 
 #include "../globals.h"
@@ -13,15 +15,26 @@
 //internal prototypes
 int loadBitmaps(void);
 void updateBaseEnemy(void *);
+int resolveDX(EnemyTypes);
+LCDBitmap* resolveBitmap(EnemyTypes);
+
 
 LCDBitmap** bmpseg;
 
+/*
+*  Load the bitmaps used by the enemy generator
+*
+*  @param - void
+*  @return - int (status code, 1 - pass, 0 - fail)
+*/
 int loadBitmapsEG()
 {
     bmpseg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
     bmpseg[0] = loadImageAtPath("images/commuter");
     bmpseg[1] = loadImageAtPath("images/bigrig");
     bmpseg[2] = loadImageAtPath("images/debris_particle1");
+
+    return 1;
  }
 
 /*
@@ -34,11 +47,21 @@ void _enemyGeneratorInitialize()
   loadBitmapsEG();
 }
 
+/*
+* Replace the  enemy sprite with a particle burst
+*
+* return - void
+*/
 void destroyBaseEnemy(int x, int y)
 {
     addParticleBurst(bmpseg[2], x, y);
 }
 
+/*
+* Update the base enemy type
+*
+* return - void
+*/
 void updateBaseEnemy(void* s)
 {
 	  SpriteBase* ptr = ((SpriteBase*) s);
@@ -48,14 +71,62 @@ void updateBaseEnemy(void* s)
     
 }
 
+/*
+*  Return the speed of the enemy type
+*
+*  @param enemyType : the enum of the type of enemy
+*
+* r eturn int - the speed of the enemy type
+*/
+int resolveDX(EnemyTypes enemyType)
+{
+    switch(enemyType)
+    {
+      case Coupe : return -3;
+      case BigRig : return -2;
+      default : return -5;
+    }
+
+    return 0;
+}
+
+/*
+*  Return Bitmap of the enemy type
+*
+*  @param enemyType : the enum of the type of enemy
+*
+* return LCDbitmap* - a pointer to the bitmap of the enemy type
+*/
+LCDBitmap* resolveBitmap(EnemyTypes enemyType)
+{
+    switch(enemyType)
+    {
+      case Coupe : return bmpseg[0];
+      case BigRig : return bmpseg[1];
+      default : return bmpseg[2];
+    }
+
+    return NULL;
+}
+
+/*
+*  Create the base enemy types
+*
+*  @param enemyType - the enum of the type of enemy
+*  @param y - the y position the enemy spawns at
+*
+*  @param SpriteBase* - the SpriteBase object created
+*/
 SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
 {
     SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
 	  LCDSprite* baseSprite = p->sprite->newSprite();
-	  p->sprite->setImage(baseSprite, bmpseg[0], kBitmapUnflipped);	
+	  LCDBitmap* bmpmy = resolveBitmap(enemyType);
+
+    p->sprite->setImage(baseSprite, bmpmy, kBitmapUnflipped);	
 	
 	  int w,h;
-	  p->graphics->getBitmapData(bmpseg[0], &w, &h, NULL, NULL, NULL);
+	  p->graphics->getBitmapData(bmpmy, &w, &h, NULL, NULL, NULL);
 	  PDRect cr = PDRectMake(0, 0, w, h);
 	  p->sprite->setCollideRect(baseSprite, cr);	
 	  p->sprite->moveTo(baseSprite, 410, y);
@@ -64,7 +135,7 @@ SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
 	  baseEnemy->sprite = baseSprite;
     baseEnemy->x = 410;
     baseEnemy->y = y;
-	  baseEnemy->dx = -3;
+	  baseEnemy->dx = resolveDX(enemyType);
 	  baseEnemy->spriteUpdate = updateBaseEnemy;
     p->sprite->setUpdateFunction(baseSprite, updateBaseEnemy);
 
