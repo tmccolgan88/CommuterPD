@@ -67,6 +67,7 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 void setupGame()
 {
 	_spriteEngineInitialize();
+	_uiInitialize();
 	removeAllParticles();
 	loadLevel(1);
  

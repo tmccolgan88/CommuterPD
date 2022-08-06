@@ -30,7 +30,7 @@ LCDBitmap** bmpseg;
 int loadBitmapsEG()
 {
     bmpseg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
-    bmpseg[0] = loadImageAtPath("images/commuter");
+    bmpseg[0] = loadImageAtPath("images/coupe");
     bmpseg[1] = loadImageAtPath("images/bigrig");
     bmpseg[2] = loadImageAtPath("images/debris_particle1");
 
@@ -65,9 +65,10 @@ void destroyBaseEnemy(int x, int y)
 void updateBaseEnemy(void* s)
 {
 	  SpriteBase* ptr = ((SpriteBase*) s);
-
+    int* actualY, actualX, len;
 	  ptr->x += ptr->dx;
 	  p->sprite->moveBy(ptr->sprite, ptr->dx, 0);
+    //p->sprite->moveWithCollisions(ptr->sprite, ptr->x, ptr->y, &actualY, &actualX, &len);
     
 }
 
@@ -82,8 +83,8 @@ int resolveDX(EnemyTypes enemyType)
 {
     switch(enemyType)
     {
-      case Coupe : return -3;
-      case BigRig : return -2;
+      case Coupe : return -2;
+      case BigRig : return -4;
       default : return -5;
     }
 

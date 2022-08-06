@@ -61,6 +61,19 @@ int loadBitmapsC()
 ////////////////////////////
 
 /*
+*  Return the health of the player
+*
+*  @return player->health - the current health of the player 
+*/
+int getPlayerHealth()
+{
+    if (player == NULL)
+        return -1;
+
+    return player->health;
+}
+
+/*
 *  Return the collision rect of the player
 *
 *  @return PDRect* - a pointer to the collision rect 
@@ -69,6 +82,14 @@ PDRect getCommuterRect()
 {
   return p->sprite->getBounds(player->sb->sprite);
 } //getPDRect()
+
+int getPlayerScore()
+{
+  if (player == NULL)
+      return -1;
+
+    return player->points;
+}
 
 /*
 *  Return the distance traveled / 100
@@ -80,7 +101,7 @@ int getDistanceTraveled()
     if (player == NULL)
       return -1;
 
-    return player->distanceTraveledSP / 100;
+    return player->distanceTraveledSP;
 } //getDistanceTraveled
 
 /*
@@ -121,6 +142,7 @@ void setDamaged (int _isDamaged)
 {
     if (!isDamaged && _isDamaged)
     {
+        player->health--;
         isDamaged = _isDamaged;
         blinking = 1;
         p->sprite->setImage(player->sb->sprite, bmpsc[1], kBitmapUnflipped);
@@ -271,6 +293,7 @@ int updateCommuter(int delTime)
     playerPtr->sb->x = x;
     playerPtr->sb->y = y;
     playerPtr->distanceTraveledSP += playerSpeed;
+    playerPtr->points = playerPtr->distanceTraveledSP / 10;
     distanceTraveled += playerSpeed;
    
 	return 1;
@@ -322,6 +345,5 @@ void createPlayer()
 	spritePlayer->sb = base;
     spritePlayer->distanceTraveledSP = 0;
 	spritePlayer->health = 3;
- 
 	player = spritePlayer;
 }

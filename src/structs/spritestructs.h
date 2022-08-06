@@ -31,6 +31,7 @@ typedef struct SpriteBase {
 typedef struct SpritePlayer {
   SpriteBase *sb;
   int distanceTraveledSP;
+  int points;
   int health;
 } SpritePlayer;
 

@@ -84,6 +84,4 @@ void createBackground()
 	p->sprite->setBounds(bgSprite, bgBounds);
 	p->sprite->setZIndex(bgSprite, 0);
 	p->sprite->addSprite(bgSprite);
-
-    p->system->logToConsole("bgwidth : %i", bgWidth);
 }

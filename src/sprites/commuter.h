@@ -3,6 +3,8 @@ void setLaneWidth(int);
 void setTopOfRoad(int);
 void setBottomOfRoad(int);
 void setDamaged(int);
+int getPlayerHealth(void);  
+int getPlayerScore(void);
 int getDistanceTraveled(void);
 int getSpeed(void);
 void createPlayer(void);

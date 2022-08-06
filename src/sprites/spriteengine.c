@@ -75,10 +75,6 @@ void createCommuter()
 void addBaseEnemy(EnemyTypes enemyType, int y)
 {
     BaseListNode* newNode = p->system->realloc(NULL, sizeof(BaseListNode));
-    if (enemyType == Coupe)
-      p->system->logToConsole("Coupe");
-    if (enemyType == BigRig)
-      p->system->logToConsole("BigRig");
     newNode->enemy = createBaseEnemy(enemyType, y);
     newNode->next = NULL;
 
