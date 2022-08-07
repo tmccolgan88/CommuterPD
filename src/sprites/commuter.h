@@ -4,6 +4,7 @@ void setTopOfRoad(int);
 void setBottomOfRoad(int);
 void setDamaged(int);
 int getPlayerHealth(void);  
+int getPlayerFlashes(void);
 int getPlayerScore(void);
 int getDistanceTraveled(void);
 int getSpeed(void);

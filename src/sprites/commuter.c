@@ -26,6 +26,7 @@ int commWidthOffset = 0;
 int playerHealth = 3;
 int playerSpeed = 20;
 int canChangeSpeed = 1;
+int flashes = 3;
 int canJump = 1;
 int speedTime = 0;
 int speedTimer = 1000;
@@ -71,6 +72,19 @@ int getPlayerHealth()
         return -1;
 
     return player->health;
+}
+
+/*
+*  Return the flashes the player currently has
+*
+*  @return player->flashes - the current flashes the player has 
+*/
+int getPlayerFlashes()
+{
+    if (player == NULL)
+        return -1;
+
+    return player->flashes;
 }
 
 /*
@@ -220,6 +234,7 @@ int updateCommuter(int delTime)
         deltaY = -laneSize;
         addTeleportParticleBurst(bmpsc[2], playerPtr->sb->x, playerPtr->sb->y);
         p->sprite->setImage(playerPtr->sb->sprite, bmpsc[1], kBitmapUnflipped);
+        playerPtr->flashes--;
         canJump = 0;
     }
     if ((kButtonB & pushed) && canJump)
@@ -227,6 +242,7 @@ int updateCommuter(int delTime)
         deltaY = laneSize;
         addTeleportParticleBurst(bmpsc[2], playerPtr->sb->x, playerPtr->sb->y);
         p->sprite->setImage(playerPtr->sb->sprite, bmpsc[1], kBitmapUnflipped);
+        playerPtr->flashes--;
         canJump = 0;
     }
 
@@ -240,7 +256,7 @@ int updateCommuter(int delTime)
         canJump = 1;
         p->sprite->setImage(playerPtr->sb->sprite, bmpsc[0], kBitmapUnflipped);
     } 
-
+    
     //damage state logic
     if  (isDamaged)
     {
@@ -271,7 +287,7 @@ int updateCommuter(int delTime)
             isDamaged = 0;
             damageTime = 0;
         }
-    }
+    } // if (isDamaged)
 
     //make sure the player is in the screen bounds
     float x,y;
@@ -345,5 +361,6 @@ void createPlayer()
 	spritePlayer->sb = base;
     spritePlayer->distanceTraveledSP = 0;
 	spritePlayer->health = 3;
+    spritePlayer->flashes = 3;
 	player = spritePlayer;
 }

@@ -33,6 +33,7 @@ typedef struct SpritePlayer {
   int distanceTraveledSP;
   int points;
   int health;
+  int flashes;
 } SpritePlayer;
 
 //////////////////////////////////////////
