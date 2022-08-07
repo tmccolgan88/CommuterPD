@@ -177,10 +177,10 @@ void setDamaged (int _isDamaged)
 int updateCommuter(int delTime)
 {
     SpritePlayer* playerPtr = player;
-	PDButtons current, pushed, released;
+    PDButtons current, pushed, released;
     float crankChange = 0;
-	int deltaX = 0;
-	int deltaY = 0;
+    int deltaX = 0;
+    int deltaY = 0;
 
 	p->system->getButtonState(&current, &pushed, &released);
     crankChange = p->system->getCrankChange();
