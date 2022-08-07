@@ -33,7 +33,7 @@ void drawHUD()
     char flashText[20];
     
     sprintf(healthText, "Health : ");
-    p->graphics->drawText(healthText, strlen(healthText), kASCIIEncoding, 7, 190);
+    p->graphics->drawText(healthText, strlen(healthText), kASCIIEncoding, 7, 195);
     int i = 0;
     for (i = getPlayerHealth(); i > 0; i--)
     {
@@ -41,7 +41,7 @@ void drawHUD()
     }
 
     sprintf(flashText, "Flashes : ");
-    p->graphics->drawText(flashText, strlen(flashText), kASCIIEncoding, 7, 215);
+    p->graphics->drawText(flashText, strlen(flashText), kASCIIEncoding, 7, 220);
     for(i = getPlayerFlashes(); i > 0; i--)
     {
         p->graphics->drawBitmap(healthBMP, 60 + (15 * i), 220, kBitmapUnflipped);
@@ -50,6 +50,6 @@ void drawHUD()
     sprintf(scoreText, "Score : %i", getPlayerScore());
     sprintf(speedText, "Speed : %i", getSpeed());
 
-    p->graphics->drawText(scoreText, strlen(scoreText), kASCIIEncoding, 180, 210);
-    p->graphics->drawText(speedText, strlen(speedText), kASCIIEncoding, 300, 210);
+    p->graphics->drawText(scoreText, strlen(scoreText), kASCIIEncoding, 180, 195);
+    p->graphics->drawText(speedText, strlen(speedText), kASCIIEncoding, 180, 220);
 } //drawHUD
