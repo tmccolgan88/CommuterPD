@@ -160,6 +160,9 @@ void setDamaged (int _isDamaged)
         isDamaged = _isDamaged;
         blinking = 1;
         p->sprite->setImage(player->sb->sprite, bmpsc[1], kBitmapUnflipped);
+
+        if (player->health <= 0)
+          ; //gameState = Pause;
     }
 } //setDamaged
 
@@ -320,12 +323,11 @@ int updateCommuter(int delTime)
 
 void commuterDamage()
 {
-  playerHealth--;
-  if (playerHealth == -1)
+  player->health--;
+  if (player->health <= 0)
   {
-      ;
     //gameOver
-    //gameState = GameOver;
+    gameState = Pause;
   }
 
   //isDamaged = 1;

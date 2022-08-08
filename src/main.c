@@ -22,16 +22,6 @@ static int update(void* userdata);
 void loadAssets(void);
 void setupGame(void);
 
-typedef enum {
-  Play,
-  Pause,
-  GameOver
-} GameState;
-
-static GameState gameState = Play;
-
-SpriteBase* tempBase = NULL;
-
 int lastTime = 0;
 int deltaTime = 0;
 
@@ -66,6 +56,7 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 /**/
 void setupGame()
 {
+    gameState = Play;
 	_spriteEngineInitialize();
 	_uiInitialize();
 	removeAllParticles();
@@ -95,6 +86,19 @@ int updatePlay(void* userdata)
 } //updatePlay
 
 /*
+*  Update loop for the Play state
+*
+*  @param userdata - some bullshit
+*/
+int updatePause(void* userdata)
+{
+	p->sprite->drawSprites();
+    drawParticles();
+	drawHUD();
+	return 1;
+} //updatePlay
+
+/*
 *  Main update loop. Clears the screen and calls update
 *    for the current state of the game
 *
@@ -103,10 +107,10 @@ int updatePlay(void* userdata)
 static int update(void* userdata)
 {
 	p->graphics->clear(kColorWhite);
-
 	if (gameState == Play)
 	  updatePlay(userdata);
-
+    else if (gameState == Pause)
+	  updatePause(userdata);
 	p->system->drawFPS(5, 5);
 
 	return 1;
