@@ -37,14 +37,14 @@ void drawHUD()
     int i = 0;
     for (i = getPlayerHealth(); i > 0; i--)
     {
-        p->graphics->drawBitmap(healthBMP, 50 + (15 * i), 195, kBitmapUnflipped);
+        p->graphics->drawBitmap(healthBMP, 50 + (15 * i), 200, kBitmapUnflipped);
     }
 
     sprintf(flashText, "Flashes : ");
     p->graphics->drawText(flashText, strlen(flashText), kASCIIEncoding, 7, 220);
     for(i = getPlayerFlashes(); i > 0; i--)
     {
-        p->graphics->drawBitmap(healthBMP, 60 + (15 * i), 220, kBitmapUnflipped);
+        p->graphics->drawBitmap(healthBMP, 60 + (15 * i), 225, kBitmapUnflipped);
     }
 
     sprintf(scoreText, "Score : %i", getPlayerScore());

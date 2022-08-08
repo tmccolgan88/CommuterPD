@@ -2,7 +2,7 @@
   Author : Tim Mccolgan
   Date   : 05/13/2022
 
-  Purpose : Logic to create/update level enemies. 
+  Purpose : Logic to create/update level enemies.
 */
 
 #include "../structs/spritestructs.h"
@@ -90,6 +90,20 @@ void addBaseEnemy(EnemyTypes enemyType, int y)
     }
 }
 
+
+/*
+*  Delete a base sprite that has been collided into
+*
+*  @param SpriteBase* enemyToDelete - pointer to a SpriteBase to delete
+*  @return - void
+*/
+void removeBaseEnemy(SpriteBase* enemyToDelete)
+{
+    //p->system->realloc(enemyToDelete->bmp, 0);
+    //p->system->realloc(enemyToDelete->type, 0);
+    p->system->realloc(enemyToDelete, 0);
+}
+
 /*
 *  Update all the sprites in the current scene. Delete sprites where neccessary
 *
@@ -103,11 +117,12 @@ void updateSpriteLists(int deltaTime)
     PDRect tempRect;
     PDRect playerRect = getCommuterRect();
     BaseListNode* baseListNode = baseListHead;
-    
+    BaseListNode* saveNode = baseListNode;
+
     updateBackground();
     updateCommuter(delTime);
     updateParticles(deltaTime);
-    
+
     if (baseListNode != NULL)
     {
         while (baseListNode != NULL)
@@ -117,17 +132,33 @@ void updateSpriteLists(int deltaTime)
             tempRect = p->sprite->getBounds(baseListNode->enemy->sprite);
             if (isColliding(&playerRect, &tempRect))
             {
-                //isColliding keeps returning true becaseu the sprite isn't being removed from the
-                //custom sprite list
                 setDamaged(1);
-                //TODO - actually delete the sprite rather than moving it out of the way
                 destroyBaseEnemy(baseListNode->enemy->x, baseListNode->enemy->y);
-                baseListNode->enemy->x = -50;
-                baseListNode->enemy->y = -50;
-                p->sprite->moveTo(baseListNode->enemy->sprite, baseListNode->enemy->x, baseListNode->enemy->y);
                 p->sprite->removeSprite(baseListNode->enemy->sprite);
+                removeBaseEnemy(baseListNode->enemy);
+
+                if (baseListNode == baseListHead)
+                {
+                    baseListHead = baseListHead->next;
+                    p->system->realloc(baseListNode, 0);
+                    baseListNode = baseListHead;
+                    saveNode = baseListNode;
+                }
+                else if (baseListNode->next != NULL)
+                {
+                    saveNode->next = baseListNode->next;
+                    p->system->realloc(baseListNode, 0);
+                    baseListNode = saveNode;
+                }
+                else
+                {
+                    saveNode->next = NULL;
+                    p->system->realloc(baseListNode, 0);
+                    return;
+                }
             }
+            saveNode = baseListNode;
             baseListNode = baseListNode->next;
-        }
-    }
+        } // while (baseListNode != NULL)
+    }  //if (baseListNode != NULL)
 } //updateSpriteLists

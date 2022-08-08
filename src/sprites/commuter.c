@@ -229,6 +229,9 @@ int updateCommuter(int delTime)
 	}
 
     //lane warping logic
+    if (playerPtr->flashes <= 0)
+        canJump = 0;
+        
     if ((kButtonA & pushed) && canJump)
     {
         deltaY = -laneSize;

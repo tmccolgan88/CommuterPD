@@ -84,7 +84,7 @@ int resolveDX(EnemyTypes enemyType)
     switch(enemyType)
     {
       case Coupe : return -2;
-      case BigRig : return -4;
+      case BigRig : return -1;
       default : return -5;
     }
 
