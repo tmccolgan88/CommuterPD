@@ -54,6 +54,7 @@ int loadBitmapsC()
   bmpsc[0] = loadImageAtPath("images/commuter");
   bmpsc[1] = loadImageAtPath("images/blink");
   bmpsc[2] = loadImageAtPath("images/teleport_particle");
+  bmpsc[3] = loadImageAtPath("images/debris_particle1");
 } //loadBitmaps
 
 
@@ -162,7 +163,12 @@ void setDamaged (int _isDamaged)
         p->sprite->setImage(player->sb->sprite, bmpsc[1], kBitmapUnflipped);
 
         if (player->health <= 0)
-          ; //gameState = Pause;
+        {
+            float x,y;
+            p->sprite->getPosition(player->sb->sprite, &x, &y);
+            addParticleBurst(bmpsc[3], x, y);
+            gameState = Pause;
+        }
     }
 } //setDamaged
 

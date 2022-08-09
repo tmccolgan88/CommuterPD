@@ -93,6 +93,7 @@ int updatePlay(void* userdata)
 int updatePause(void* userdata)
 {
 	p->sprite->drawSprites();
+	updateParticles(deltaTime);
     drawParticles();
 	drawHUD();
 	return 1;

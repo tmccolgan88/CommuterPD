@@ -32,7 +32,8 @@ int loadBitmapsEG()
     bmpseg = p->system->realloc(NULL, sizeof(LCDBitmap *) * 3);
     bmpseg[0] = loadImageAtPath("images/coupe");
     bmpseg[1] = loadImageAtPath("images/bigrig");
-    bmpseg[2] = loadImageAtPath("images/debris_particle1");
+    bmpseg[2] = loadImageAtPath("images/van");
+    bmpseg[3] = loadImageAtPath("images/debris_particle1");
 
     return 1;
  }
@@ -54,7 +55,7 @@ void _enemyGeneratorInitialize()
 */
 void destroyBaseEnemy(int x, int y)
 {
-    addParticleBurst(bmpseg[2], x, y);
+    addParticleBurst(bmpseg[3], x, y);
 }
 
 /*
@@ -84,7 +85,8 @@ int resolveDX(EnemyTypes enemyType)
     switch(enemyType)
     {
       case Coupe : return -2;
-      case BigRig : return -1;
+      case Van : return -3;
+      case BigRig : return -5;
       default : return -5;
     }
 
@@ -104,7 +106,8 @@ LCDBitmap* resolveBitmap(EnemyTypes enemyType)
     {
       case Coupe : return bmpseg[0];
       case BigRig : return bmpseg[1];
-      default : return bmpseg[2];
+      case Van : return bmpseg[2];
+      default : return bmpseg[3];
     }
 
     return NULL;
