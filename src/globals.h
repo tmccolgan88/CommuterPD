@@ -1,5 +1,8 @@
 #include "pd_api.h"
 
+#define ENEMY_X_START 410
+#define JAM_BUFFER 35
+
 typedef enum {
   Play,
   Pause,

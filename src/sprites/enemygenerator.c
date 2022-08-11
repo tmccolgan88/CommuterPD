@@ -121,7 +121,7 @@ LCDBitmap* resolveBitmap(EnemyTypes enemyType)
 *
 *  @param SpriteBase* - the SpriteBase object created
 */
-SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
+SpriteBase* createBaseEnemy(EnemyTypes enemyType, int x, int y)
 {
     SpriteBase* baseEnemy = realloc(NULL, sizeof(SpriteBase));
 	  LCDSprite* baseSprite = p->sprite->newSprite();
@@ -133,11 +133,11 @@ SpriteBase* createBaseEnemy(EnemyTypes enemyType, int y)
 	  p->graphics->getBitmapData(bmpmy, &w, &h, NULL, NULL, NULL);
 	  PDRect cr = PDRectMake(0, 0, w, h);
 	  p->sprite->setCollideRect(baseSprite, cr);	
-	  p->sprite->moveTo(baseSprite, 410, y);
+	  p->sprite->moveTo(baseSprite, x, y);
 	  p->sprite->addSprite(baseSprite);
   
 	  baseEnemy->sprite = baseSprite;
-    baseEnemy->x = 410;
+    baseEnemy->x = x;
     baseEnemy->y = y;
 	  baseEnemy->dx = resolveDX(enemyType);
 	  baseEnemy->spriteUpdate = updateBaseEnemy;

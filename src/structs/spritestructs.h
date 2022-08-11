@@ -12,11 +12,17 @@ typedef enum {
 
 typedef enum {
     Coupe,
+    CoupeJam,
     Sedan,
+    SedanJam,
     Van,
+    VanJam,
     Bus,
+    BusJam,
     Truck,
-    BigRig
+    TruckJam,
+    BigRig,
+    BigRigJam
 } EnemyTypes;
 
 typedef struct SpriteBase {
