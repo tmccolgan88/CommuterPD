@@ -102,8 +102,12 @@ void didDecodeTableValue(json_decoder* decoder, const char* key, json_value valu
         EnemyTypes tempType;
         if (strcmp(json_stringValue(value), "Coupe") == 0)
             tempType = Coupe;
+        else if (strcmp(json_stringValue(value), "CoupeJam") == 0)
+            tempType = CoupeJam;
         else if (strcmp(json_stringValue(value), "BigRig") == 0)
             tempType = BigRig;
+        else if (strcmp(json_stringValue(value), "Van") == 0)
+            tempType = Van;
         else
           tempType = Coupe;
 
@@ -158,7 +162,10 @@ int updateLevel()
     if (level->enemeyIndex < level->numEnemies)
         if (distanceTraveled > level->enemies[level->enemeyIndex].launchDistance)
         {
-            addBaseEnemy(level->enemies[level->enemeyIndex].type, level->enemies[level->enemeyIndex].launchY);
+            if (level->enemies[level->enemeyIndex].type == CoupeJam)
+                addBaseEnemyJam(level->enemies[level->enemeyIndex].type, level->enemies[level->enemeyIndex].launchY, 5);
+            else
+                addBaseEnemy(level->enemies[level->enemeyIndex].type, level->enemies[level->enemeyIndex].launchY);
             level->enemeyIndex++;
         }
 }

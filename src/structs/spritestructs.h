@@ -10,6 +10,7 @@ typedef enum {
   Base
 } SpriteTypes;
 
+//idk if jam is the best solution
 typedef enum {
     Coupe,
     CoupeJam,

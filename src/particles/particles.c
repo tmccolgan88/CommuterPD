@@ -21,6 +21,7 @@ typedef struct Particle
 	int dx, dy;
 	int deltaTime;
 	int timer;
+	int dead;
 
 } Particle;
 
@@ -37,8 +38,14 @@ typedef struct ParticleBurstNode
 	struct ParticleBurstNode* next;
 } ParticleBurstNode;
 
+//local prototype
+void addParticleBurstNode(ParticleListNode* listHead);
+void addParticleListNode(Particle* particle);
+
 ParticleBurstNode *particleBurstHead = NULL;
 ParticleBurstNode *particleBurstCurrent = NULL;
+
+ParticleListNode* tempList = NULL;
 
 /*
 * adds a burst of particles that disperse at random angles and speeds
@@ -51,7 +58,7 @@ ParticleBurstNode *particleBurstCurrent = NULL;
 */
 void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 {
-	ParticleListNode *headParticle = NULL;
+	ParticleListNode *headParticle = tempList;
     ParticleListNode *currentParticle = NULL;
 	int i = 0;
 	int numParticles = 6;
@@ -66,6 +73,7 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 		particle->dy = (rand() % 20) - 10;
 		particle->timer = 200;
 		particle->deltaTime = 0;
+		particle->dead = 0;
 
 		ParticleListNode* node;
 		node = p->system->realloc(NULL, sizeof(ParticleListNode));
@@ -84,26 +92,12 @@ void addParticleBurst(LCDBitmap *particleBMP, int x, int y)
 			currentParticle->next = node;
 			currentParticle = currentParticle->next;
 		}
+		
+        addParticleListNode(particle);
 	}
 
-    ParticleBurstNode* burstNode = p->system->realloc(NULL, sizeof(ParticleBurstNode));
-    burstNode->burstHead = headParticle;
-    burstNode->next = NULL;
-
-    if (particleBurstHead == NULL)
-    {
-        particleBurstHead = burstNode;
-        particleBurstHead->next = NULL;
-
-        particleBurstCurrent = particleBurstHead;
-    }
-    else
-    {
-        particleBurstCurrent->next = burstNode;
-        particleBurstCurrent = particleBurstCurrent->next;
-        particleBurstCurrent->next = NULL;
-    }
-}
+    addParticleBurstNode(headParticle);
+} //addParticleBurst
 
 void addTeleportParticleBurst(LCDBitmap *particleBMP, int x, int y) 
 {
@@ -143,23 +137,7 @@ void addTeleportParticleBurst(LCDBitmap *particleBMP, int x, int y)
 		}
 	}
 
-    ParticleBurstNode* burstNode = p->system->realloc(NULL, sizeof(ParticleBurstNode));
-    burstNode->burstHead = headParticle;
-    burstNode->next = NULL;
-
-    if (particleBurstHead == NULL)
-    {
-        particleBurstHead = burstNode;
-        particleBurstHead->next = NULL;
-
-        particleBurstCurrent = particleBurstHead;
-    }
-    else
-    {
-        particleBurstCurrent->next = burstNode;
-        particleBurstCurrent = particleBurstCurrent->next;
-        particleBurstCurrent->next = NULL;
-    }
+    addParticleBurstNode(headParticle);
 }
 
 void updateParticles(int deltaTime)
@@ -170,13 +148,16 @@ void updateParticles(int deltaTime)
     while (headBurstNode != NULL)
     {
         particleNode = headBurstNode->burstHead;
-
         while (particleNode != NULL)
         {
             particleNode->p->x += particleNode->p->dx;
 		    particleNode->p->y += particleNode->p->dy;
 		    particleNode->p->deltaTime += deltaTime;
+			
+			if (particleNode->p->timer < particleNode->p->deltaTime)
+			    particleNode->p->dead = 1;
             particleNode = particleNode->next;
+
         }
 
         headBurstNode = headBurstNode->next;
@@ -232,4 +213,30 @@ int drawParticles()
         headBurstNode = headBurstNode->next;
     }
 	return 1;
+}
+
+void addParticleBurstNode(ParticleListNode* headParticle)
+{
+    ParticleBurstNode* burstNode = p->system->realloc(NULL, sizeof(ParticleBurstNode));
+    burstNode->burstHead = headParticle;
+    burstNode->next = NULL;
+
+    if (particleBurstHead == NULL)
+    {
+        particleBurstHead = burstNode;
+        particleBurstHead->next = NULL;
+
+        particleBurstCurrent = particleBurstHead;
+    }
+    else
+    {
+        particleBurstCurrent->next = burstNode;
+        particleBurstCurrent = particleBurstCurrent->next;
+        particleBurstCurrent->next = NULL;
+    }
+}
+
+void addParticleListNode(Particle* particle)
+{
+    ;
 }

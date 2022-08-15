@@ -50,6 +50,6 @@ void drawHUD()
     sprintf(scoreText, "Score : %i", getPlayerScore());
     sprintf(speedText, "Speed : %i", getSpeed());
 
-    p->graphics->drawText(scoreText, strlen(scoreText), kASCIIEncoding, 180, 195);
-    p->graphics->drawText(speedText, strlen(speedText), kASCIIEncoding, 180, 220);
+    p->graphics->drawText(scoreText, strlen(scoreText), kASCIIEncoding, 280, 195);
+    p->graphics->drawText(speedText, strlen(speedText), kASCIIEncoding, 280, 220);
 } //drawHUD
